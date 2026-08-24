@@ -1,0 +1,3 @@
+import logo from "../../assets/images/bigf-logo.png";
+
+<img src={logo} alt="BIG F" className="logo" />

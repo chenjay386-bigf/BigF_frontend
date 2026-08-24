@@ -1,0 +1,104 @@
+.navbar{
+    background:white;
+    box-shadow:var(--shadow);
+
+    position:sticky;
+    top:0;
+
+    z-index:1000;
+}
+
+.navbar-container{
+
+    height:80px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.logo{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+    font-family:"Poppins",sans-serif;
+}
+
+.logo span{
+
+    color:#66BB6A;
+}
+
+.nav-links{
+
+    display:flex;
+
+    list-style:none;
+
+    gap:35px;
+}
+
+.nav-links a{
+
+    color:var(--text);
+
+    font-weight:500;
+
+    transition:.3s;
+}
+
+.nav-links a:hover{
+
+    color:var(--primary);
+}
+
+.auth-buttons{
+
+    display:flex;
+
+    gap:15px;
+}
+
+.login-btn{
+
+    background:var(--primary);
+
+    color:white;
+
+    padding:12px 26px;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.login-btn:hover{
+
+    background:var(--primary-dark);
+}
+
+.register-btn{
+
+    border:2px solid var(--primary);
+
+    color:var(--primary);
+
+    padding:10px 24px;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.register-btn:hover{
+
+    background:var(--primary);
+
+    color:white;
+}
