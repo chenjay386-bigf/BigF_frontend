@@ -216,6 +216,25 @@ const [currentUser, setCurrentUser] = useState(() => {
   const saved = localStorage.getItem("currentUser");
   return saved ? JSON.parse(saved) : null;
 });
+
+const handleFollowUser = (userToFollowId) => {
+  // 1. Calculate the new following count (increment by 1)
+  const updatedFollowingCount = (currentUser?.following || 0) + 1;
+
+  // 2. Create the updated user object
+  const updatedUser = {
+    ...currentUser,
+    following: updatedFollowingCount,
+    // If you track a list of IDs you are following, add them here too:
+    // followingList: [...(currentUser?.followingList || []), userToFollowId]
+  };
+
+  // 3. Update React state so the UI changes instantly
+  setCurrentUser(updatedUser);
+
+  // 4. Save to browser storage so it doesn't reset on refresh
+  localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+};
  
 
 
