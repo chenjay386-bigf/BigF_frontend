@@ -1342,61 +1342,122 @@ const [currentUser, setCurrentUser] = useState(() => {
             </div>
           </div>
         )}
-{/* --- PROFILE VIEW --- */}
-        {activeNavTab === "profile" && (
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249, 115, 22, 0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.handle || "@user"}</span>
-              <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
-                ✏️ Edit Profile
-              </button>
-            </div>
 
-            <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-              <img src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"} alt={currentUser?.name || "User"} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
-              <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || "New User"}</h3>
-              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{currentUser?.handle || "@user"}</p>
-              
-              {/* Followers and Following Stats */}
-              <div style={{ display: "flex", gap: "24px", marginBottom: "12px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "10px 20px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || 0}</div>
-                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
-                </div>
-                <div style={{ width: "1px", backgroundColor: "#fed7aa" }} />
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || 0}</div>
-                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
-                </div>
+       {/* --- PROFILE VIEW --- */}
+{activeNavTab === "profile" && (
+  <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249, 115, 22, 0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+      <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.handle || "@user"}</span>
+      <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
+        ✏️ Edit Profile
+      </button>
+    </div>
+
+    <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+      <img src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"} alt={currentUser?.name || "User"} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
+      <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || "New User"}</h3>
+      <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{currentUser?.handle || "@user"}</p>
+      
+      {/* Followers and Following Stats */}
+      <div style={{ display: "flex", gap: "24px", marginBottom: "12px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "10px 20px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || 0}</div>
+          <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
+        </div>
+        <div style={{ width: "1px", backgroundColor: "#fed7aa" }} />
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || 0}</div>
+          <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
+        </div>
+      </div>
+
+      <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{currentUser?.bio || "No bio yet."}</p>
+    </div>
+
+    <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+      <button onClick={() => setProfileTab("videos")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="videos" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="videos" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>📹 Submissions</button>
+      <button onClick={() => setProfileTab("reposts")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="reposts" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="reposts" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>🔁 Reposts</button>
+      <button onClick={() => setProfileTab("orders")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="orders" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="orders" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>🛒 Orders</button>
+    </div>
+
+    <div style={{ padding: "16px", minHeight: "220px", background: appSettings.darkMode ? "#141210" : "#fafaf9" }}>
+      {profileTab === "orders" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {orders.map(ord => (
+            <div key={ord.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", display: "block" }}>{ord.item}</span>
+                <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>{ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong></span>
               </div>
-
-              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{currentUser?.bio || "No bio yet."}</p>
+              <span style={{ fontSize: "11px", backgroundColor: "#fef3c7", color: "#92400e", padding: "4px 10px", borderRadius: "8px", fontWeight: "1000" }}>{ord.status}</span>
             </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
-            <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <button onClick={() => setProfileTab("videos")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="videos" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="videos" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>📹 Submissions</button>
-              <button onClick={() => setProfileTab("reposts")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="reposts" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="reposts" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>🔁 Reposts</button>
-              <button onClick={() => setProfileTab("orders")} style={{ flex: 1, padding: "12px 8px", background: "none", border: "none", borderBottom: profileTab==="orders" ? "2px solid #f97316" : "none", fontWeight: "1000", fontSize: "12px", color: profileTab==="orders" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>🛒 Orders</button>
-            </div>
+{/* --- EDIT PROFILE MODAL --- */}
+{showEditProfileModal && (
+  <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000 }}>
+    <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "20px", width: "100%", maxWidth: "400px", border: "1px solid #f97316" }}>
+      <h3 style={{ color: appSettings.darkMode ? "#fff" : "#000", marginBottom: "16px", fontSize: "18px", fontWeight: "1000" }}>Edit Profile</h3>
+      
+      <form onSubmit={(e) => {
+        e.preventDefault();
 
-            <div style={{ padding: "16px", minHeight: "220px", background: appSettings.darkMode ? "#141210" : "#fafaf9" }}>
-              {profileTab === "orders" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {orders.map(ord => (
-                    <div key={ord.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", display: "block" }}>{ord.item}</span>
-                        <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>{ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong></span>
-                      </div>
-                      <span style={{ fontSize: "11px", backgroundColor: "#fef3c7", color: "#92400e", padding: "4px 10px", borderRadius: "8px", fontWeight: "1000" }}>{ord.status}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-       
+        const updatedUser = {
+          ...currentUser,
+          name: e.target.elements.editName.value,
+          handle: e.target.elements.editHandle.value,
+          bio: e.target.elements.editBio.value,
+        };
+
+        // 1. Save changes to browser localStorage
+        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
+        // 2. Update React state so the UI updates instantly
+        setCurrentUser(updatedUser);
+
+        // 3. Close the modal
+        setShowEditProfileModal(false);
+      }}>
+        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+          <label style={{ fontSize: "11px", color: "#a8a29e", display: "block", marginBottom: "4px", fontWeight: "900" }}>NAME</label>
+          <input 
+            name="editName" 
+            defaultValue={currentUser?.name || ""} 
+            style={{ width: "100%", padding: "10px", borderRadius: "8px", background: appSettings.darkMode ? "#141210" : "#f5f5f4", color: appSettings.darkMode ? "#fff" : "#000", border: "1px solid #44403c", outline: "none" }} 
+          />
+        </div>
+
+        <div style={{ marginBottom: "12px", textAlign: "left" }}>
+          <label style={{ fontSize: "11px", color: "#a8a29e", display: "block", marginBottom: "4px", fontWeight: "900" }}>HANDLE</label>
+          <input 
+            name="editHandle" 
+            defaultValue={currentUser?.handle || ""} 
+            style={{ width: "100%", padding: "10px", borderRadius: "8px", background: appSettings.darkMode ? "#141210" : "#f5f5f4", color: appSettings.darkMode ? "#fff" : "#000", border: "1px solid #44403c", outline: "none" }} 
+          />
+        </div>
+
+        <div style={{ marginBottom: "16px", textAlign: "left" }}>
+          <label style={{ fontSize: "11px", color: "#a8a29e", display: "block", marginBottom: "4px", fontWeight: "900" }}>BIO</label>
+          <textarea 
+            name="editBio" 
+            defaultValue={currentUser?.bio || ""} 
+            style={{ width: "100%", padding: "10px", borderRadius: "8px", background: appSettings.darkMode ? "#141210" : "#f5f5f4", color: appSettings.darkMode ? "#fff" : "#000", border: "1px solid #44403c", resize: "none", height: "60px", outline: "none" }} 
+          />
+        </div>
+
+        <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+          <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ padding: "8px 14px", background: "transparent", color: "#a8a29e", border: "none", cursor: "pointer", fontWeight: "bold" }}>Cancel</button>
+          <button type="submit" style={{ padding: "8px 16px", background: "#f97316", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
         {/* --- NOTIFICATIONS VIEW --- */}
         {activeNavTab === "notifications" && (
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
