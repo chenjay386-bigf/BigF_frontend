@@ -207,6 +207,9 @@ export default function App() {
   const [quizSpice, setQuizSpice] = useState(null);
   const [quizResult, setQuizResult] = useState(null);
 
+
+  const [currentUser, setCurrentUser] = useState(null);
+
   // Admin Authentication States
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
