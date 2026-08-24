@@ -1334,31 +1334,31 @@ export default function App() {
         {activeNavTab === "profile" && (
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249, 115, 22, 0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{userProfile.handle}</span>
+              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.handle || userProfile.handle}</span>
               <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
                 ✏️ Edit Profile
               </button>
             </div>
 
             <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-              <img src={userProfile.avatar} alt={userProfile.name} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
-              <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{userProfile.name}</h3>
-              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{userProfile.handle}</p>
+              <img src={currentUser?.avatar || userProfile.avatar} alt={currentUser?.name || userProfile.name} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
+              <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || userProfile.name}</h3>
+              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{currentUser?.handle || userProfile.handle}</p>
               
               {/* Followers and Following Stats */}
               <div style={{ display: "flex", gap: "24px", marginBottom: "12px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "10px 20px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{userProfile.followers}</div>
+                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || userProfile.followers}</div>
                   <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
                 </div>
                 <div style={{ width: "1px", backgroundColor: "#fed7aa" }} />
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{userProfile.following}</div>
+                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || userProfile.following}</div>
                   <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
                 </div>
               </div>
 
-              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{userProfile.bio}</p>
+              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{currentUser?.bio || userProfile.bio}</p>
             </div>
 
             <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
