@@ -207,8 +207,18 @@ export default function App() {
   const [quizSpice, setQuizSpice] = useState(null);
   const [quizResult, setQuizResult] = useState(null);
 
+ 
 
-  const [currentUser, setCurrentUser] = useState(null);
+
+
+
+const [currentUser, setCurrentUser] = useState(() => {
+  const saved = localStorage.getItem("currentUser");
+  return saved ? JSON.parse(saved) : null;
+});
+ 
+
+
 
   // Admin Authentication States
   const [isAdmin, setIsAdmin] = useState(false);
@@ -1332,36 +1342,35 @@ export default function App() {
             </div>
           </div>
         )}
-
-        {/* --- PROFILE VIEW --- */}
+{/* --- PROFILE VIEW --- */}
         {activeNavTab === "profile" && (
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249, 115, 22, 0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.handle || userProfile.handle}</span>
+              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.handle || "@user"}</span>
               <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "6px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
                 ✏️ Edit Profile
               </button>
             </div>
 
             <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-              <img src={currentUser?.avatar || userProfile.avatar} alt={currentUser?.name || userProfile.name} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
-              <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || userProfile.name}</h3>
-              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{currentUser?.handle || userProfile.handle}</p>
+              <img src={currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"} alt={currentUser?.name || "User"} style={{ width: "88px", height: "88px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316", marginBottom: "12px" }} />
+              <h3 style={{ margin: "0 0 2px 0", fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || "New User"}</h3>
+              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 10px 0", fontWeight: "700" }}>{currentUser?.handle || "@user"}</p>
               
               {/* Followers and Following Stats */}
               <div style={{ display: "flex", gap: "24px", marginBottom: "12px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "10px 20px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || userProfile.followers}</div>
+                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || 0}</div>
                   <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
                 </div>
                 <div style={{ width: "1px", backgroundColor: "#fed7aa" }} />
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || userProfile.following}</div>
+                  <div style={{ fontSize: "15px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || 0}</div>
                   <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
                 </div>
               </div>
 
-              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{currentUser?.bio || userProfile.bio}</p>
+              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 14px 0", fontWeight: "600" }}>{currentUser?.bio || "No bio yet."}</p>
             </div>
 
             <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
@@ -1387,7 +1396,7 @@ export default function App() {
             </div>
           </div>
         )}
-
+       
         {/* --- NOTIFICATIONS VIEW --- */}
         {activeNavTab === "notifications" && (
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
