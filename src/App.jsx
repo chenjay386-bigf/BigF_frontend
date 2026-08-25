@@ -2035,20 +2035,23 @@ export default function App() {
           </div>
         )}
 
-        {/* NOTIFICATIONS VIEW - Updated without admin hint */}
+        {/* NOTIFICATIONS VIEW - Admin hint removed */}
         {activeNavTab === "notifications" && (
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
             <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔔 Notifications</h3>
             <div style={{ backgroundColor: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "14px", borderRadius: "14px", border: "1px solid #fed7aa" }}>
               <div style={{ fontSize: "13px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                Welcome to BIGF Kenya! Stay tuned for updates, new challenges, and community announcements. 🎉
+                🎉 Welcome to BIGF Kenya! Stay tuned for updates, new challenges, and community announcements.
+              </div>
+              <div style={{ fontSize: "11px", fontWeight: "700", color: "#a8a29e", marginTop: "8px" }}>
+                Check back regularly for the latest news and events!
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {/* ADMIN LOGIN MODAL - Remains accessible via Ctrl+Shift+A */}
+      {/* ADMIN LOGIN MODAL - Hidden, only accessible via Ctrl+Shift+A */}
       {showAdminLoginModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "420px", width: "100%", padding: "28px", border: "2px solid #dc2626" }}>
@@ -2358,7 +2361,7 @@ export default function App() {
         </div>
       )}
 
-      {/* BOTTOM NAVIGATION BAR - WITH NOTIFICATIONS BUTTON */}
+      {/* BOTTOM NAVIGATION BAR */}
       <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,.98)", backdropFilter: "blur(25px)", borderTop: "1px solid rgba(249,115,22,.25)", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0", zIndex: 99999, pointerEvents: "auto" }}>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="home"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏠 Home</button>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="challenge"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏆 Challenge</button>
