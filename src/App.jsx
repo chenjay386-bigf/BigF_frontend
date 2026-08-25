@@ -33,6 +33,7 @@ const INITIAL_PRODUCTS = [
     description: "Bold chili oil paired with sweet tangy sauce for spice lovers looking for an exciting kick."
   }
 ];
+
 const INITIAL_FEED_VIDEOS = [
   {
     id: "feed-1",
@@ -191,132 +192,124 @@ const BACKGROUND_NOODLES = [
 
 const CATEGORIES = ["All", "Main", "Speed", "Creative", "Themed", "Gamified", "Interactive"];
 
+const getRandomName = () => {
+  const names = ["Amina", "Kiprop", "Wanjiru", "James", "Grace", "David", "Sarah", "Kevin", "Faith", "Peter", "Mary", "John", "Esther", "Samuel", "Ruth", "Daniel", "Mercy", "Joseph", "Joy", "Michael"];
+  return names[Math.floor(Math.random() * names.length)];
+};
+
 export default function App() {
   const [activeNavTab, setActiveNavTab] = useState("home");
-
   const [feedVideos, setFeedVideos] = useState(INITIAL_FEED_VIDEOS);
   const [challengeSubmissions, setChallengeSubmissions] = useState(INITIAL_CHALLENGE_SUBMISSIONS);
   const [challenges, setChallenges] = useState(INITIAL_CHALLENGES);
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
-  
   const [selectedHubChallenge, setSelectedHubChallenge] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  // Interactive Quiz States
   const [quizStep, setQuizStep] = useState(1);
   const [quizSpice, setQuizSpice] = useState(null);
   const [quizResult, setQuizResult] = useState(null);
 
- 
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem("currentUser");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.id) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    const firstName = getRandomName();
+    const randomNum = Math.floor(100 + Math.random() * 900);
+    const handle = "@" + firstName.toLowerCase() + "_" + randomNum;
+    return {
+      id: "user-" + Date.now(),
+      name: firstName,
+      handle: handle,
+      bio: "BIGF food lover 🍜✨",
+      avatar: "https://i.pravatar.cc/150?img=" + Math.floor(1 + Math.random() * 70),
+      followers: 0,
+      following: 0,
+      posts: [],
+      reposts: [],
+      votedPosts: [],
+      submissions: [],
+      createdAt: new Date().toISOString()
+    };
+  });
 
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      localStorage.setItem("bigf_user_profile", JSON.stringify(currentUser));
+    }
+  }, [currentUser]);
 
+  const [isNewUser, setIsNewUser] = useState(() => {
+    const hasVisited = localStorage.getItem("hasVisitedBefore");
+    if (!hasVisited) {
+      localStorage.setItem("hasVisitedBefore", "true");
+      return true;
+    }
+    return false;
+  });
 
-
-const [currentUser, setCurrentUser] = useState(() => {
-  const saved = localStorage.getItem("currentUser");
-  return saved ? JSON.parse(saved) : null;
-});
-
-
-const handleFollowProfile = (userToFollowId) => {
-  // 1. Calculate the new following count (increment by 1)
-  const updatedFollowingCount = (currentUser?.following || 0) + 1;
-
-  // 2. Create the updated user object
-  const updatedUser = {
-    ...currentUser,
-    following: updatedFollowingCount,
-  };
-
-  // 3. Update React state so the UI changes instantly
-  setCurrentUser(updatedUser);
-
-  // 4. Save to browser storage so it doesn't reset on refresh
-  localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-};
-
-
-  // Admin Authentication States
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
   const [adminPasscode, setAdminPasscode] = useState("");
-
-  // Admin New Challenge Form State
   const [newChalTitle, setNewChalTitle] = useState("");
   const [newChalPrize, setNewChalPrize] = useState("");
   const [newChalDays, setNewChalDays] = useState("14");
   const [newChalCategory, setNewChalCategory] = useState("Main");
   const [newChalDesc, setNewChalDesc] = useState("");
-
-  // Feedback Form State
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-
-  // Challenge Modals & Action States
   const [showChallengeActionModal, setShowChallengeActionModal] = useState(false);
   const [targetChallengeForUpload, setTargetChallengeForUpload] = useState(challenges[0]);
   const [challengeActionType, setChallengeActionType] = useState(null);
-
-// --- Freestyle Post States ---
   const [showFreestyleModal, setShowFreestyleModal] = useState(false);
   const [newPostCaption, setNewPostCaption] = useState("");
   const [newPostMedia, setNewPostMedia] = useState(null);
-
-  // --- Freestyle Post Handler ---
-  const handleCreatePost = (e) => {
-    e.preventDefault();
-    
-    const newPost = {
-      id: "post-" + Date.now(),
-      caption: newPostCaption,
-      videoUrl: newPostMedia ? URL.createObjectURL(newPostMedia) : null,
-      user: "You",
-      avatar: "👤",
-      likes: 0,
-      comments: [],
-      timestamp: "Just now"
-    };
-
-    setFeedVideos(prev => [newPost, ...prev]);
-    setNewPostCaption("");
-    setNewPostMedia(null);
-    setShowFreestyleModal(false);
-  };
-  
-  // Media state
   const [mediaSubMode, setMediaSubMode] = useState("choose");
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadPreview, setUploadPreview] = useState(null);
   const [uploadCaption, setUploadCaption] = useState("");
-
-  // TikTok challenge submission state
   const [externalSocialUrl, setExternalSocialUrl] = useState("");
   const [socialCaption, setSocialCaption] = useState("");
-
-  // Recording camera refs & state
   const videoFeedRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
-
   const [orders, setOrders] = useState([
     { id: "ORD-9421", customer: "Amina Otieno", item: "BIGF Chicken Flavor (Pack of 5)", date: "Aug 9, 2026", total: "KSh 250", status: "Delivered", image: INITIAL_PRODUCTS[0].image }
   ]);
-
-  // Comment States
   const [newCommentText, setNewCommentText] = useState("");
 
   const [userProfile, setUserProfile] = useState(() => {
     const saved = localStorage.getItem("bigf_user_profile");
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+      try { 
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      try {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && parsed.name) {
+          return parsed;
+        }
+      } catch (e) {}
     }
     return {
-      name: "New BIGF User",
+      name: getRandomName(),
       handle: "@bigf_user",
       bio: "Ready for BIGF Kenya challenges 🍜✨",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+      avatar: "https://i.pravatar.cc/150?img=" + Math.floor(1 + Math.random() * 70),
       followers: 0,
       following: 0,
       posts: [],
@@ -324,15 +317,14 @@ const handleFollowProfile = (userToFollowId) => {
       votedPosts: []
     };
   });
-  
 
   const [profileTab, setProfileTab] = useState("videos");
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
-  
-  const [editName, setEditName] = useState(userProfile.name);
-  const [editBio, setEditBio] = useState(userProfile.bio);
-  const [editAvatar, setEditAvatar] = useState(userProfile.avatar);
+  const [editName, setEditName] = useState(currentUser?.name || userProfile.name);
+  const [editBio, setEditBio] = useState(currentUser?.bio || userProfile.bio);
+  const [editAvatar, setEditAvatar] = useState(currentUser?.avatar || userProfile.avatar);
+  const [editHandle, setEditHandle] = useState(currentUser?.handle || userProfile.handle);
 
   const [appSettings, setAppSettings] = useState({
     darkMode: false,
@@ -392,7 +384,16 @@ const handleFollowProfile = (userToFollowId) => {
       setCameraStream(null);
       setIsRecording(false);
     }
-  }, [showChallengeActionModal]);
+  }, [showChallengeActionModal, cameraStream]);
+
+  useEffect(() => {
+    if (currentUser) {
+      setEditName(currentUser.name || "");
+      setEditBio(currentUser.bio || "");
+      setEditAvatar(currentUser.avatar || "");
+      setEditHandle(currentUser.handle || "");
+    }
+  }, [currentUser]);
 
   const handleAdminLogin = (e) => {
     e.preventDefault();
@@ -536,8 +537,8 @@ const handleFollowProfile = (userToFollowId) => {
       id: "submission-" + Date.now(),
       challengeId: targetChal.id,
       challengeTitle: targetChal.title,
-      pioneer: userProfile.name,
-      handle: userProfile.handle,
+      pioneer: currentUser?.name || "BIGF User",
+      handle: currentUser?.handle || "@user",
       thumbnail: products[1].image,
       caption: socialCaption,
       tiktokUrl: url,
@@ -546,38 +547,61 @@ const handleFollowProfile = (userToFollowId) => {
       isFollowing: false
     };
 
-    const handleSaveEditProfile = (e) => {
-    e.preventDefault();
-    console.log("Save button clicked! New name:", editName); // Add this line
+    if (currentUser) {
+      const updatedUser = {
+        ...currentUser,
+        submissions: [...(currentUser.submissions || []), newSocialSubmission]
+      };
+      setCurrentUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
 
-    const updatedProfile = {
-      ...userProfile,
-      name: editName,
-      bio: editBio,
-      avatar: editAvatar || userProfile.avatar
-    };
-    
-    setUserProfile(updatedProfile);
-    localStorage.setItem("bigf_user_profile", JSON.stringify(updatedProfile));
-    setShowEditProfileModal(false);
-  };
-
-    // TikTok challenge entries stay ONLY in the challenge system.
     setChallengeSubmissions(prev => [newSocialSubmission, ...prev]);
     setExternalSocialUrl("");
     setSocialCaption("");
     setChallengeActionType(null);
     setShowChallengeActionModal(false);
+    alert("🎉 Your TikTok entry has been submitted to the challenge!");
+  };
+
+  const handleCreatePost = (e) => {
+    e.preventDefault();
+    
+    const newPost = {
+      id: "post-" + Date.now(),
+      caption: newPostCaption,
+      videoUrl: newPostMedia ? URL.createObjectURL(newPostMedia) : null,
+      user: currentUser?.name || "You",
+      avatar: currentUser?.avatar || "👤",
+      likes: 0,
+      comments: [],
+      timestamp: "Just now",
+      pioneer: currentUser?.name || "You",
+      handle: currentUser?.handle || "@user",
+      thumbnail: newPostMedia ? URL.createObjectURL(newPostMedia) : "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+      likedByMe: false,
+      repostedByMe: false,
+      isFollowing: false
+    };
+
+    setFeedVideos(prev => [newPost, ...prev]);
+    setNewPostCaption("");
+    setNewPostMedia(null);
+    setShowFreestyleModal(false);
   };
 
   const handleFollowUser = (postId) => {
     const updateFollowing = (items) => items.map(v => {
       if (v.id === postId) {
         const nextFollowing = !v.isFollowing;
-        setUserProfile(prof => ({
-          ...prof,
-          following: Math.max(0, nextFollowing ? prof.following + 1 : prof.following - 1)
-        }));
+        if (currentUser) {
+          const updatedUser = {
+            ...currentUser,
+            following: Math.max(0, nextFollowing ? (currentUser.following || 0) + 1 : (currentUser.following || 0) - 1)
+          };
+          setCurrentUser(updatedUser);
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        }
         return { ...v, isFollowing: nextFollowing };
       }
       return v;
@@ -590,12 +614,14 @@ const handleFollowProfile = (userToFollowId) => {
     setChallengeSubmissions(prev => prev.map(v => {
       if (v.id === postId) {
         const nextVoted = !v.votedByMe;
-        setUserProfile(prof => {
+        if (currentUser) {
           const updatedVotedPosts = nextVoted
-            ? [...prof.votedPosts, v]
-            : prof.votedPosts.filter(item => item.id !== postId);
-          return { ...prof, votedPosts: updatedVotedPosts };
-        });
+            ? [...(currentUser.votedPosts || []), v]
+            : (currentUser.votedPosts || []).filter(item => item.id !== postId);
+          const updatedUser = { ...currentUser, votedPosts: updatedVotedPosts };
+          setCurrentUser(updatedUser);
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        }
 
         return {
           ...v,
@@ -625,12 +651,14 @@ const handleFollowProfile = (userToFollowId) => {
     setFeedVideos(prev => prev.map(v => {
       if (v.id === postId) {
         const nextReposted = !v.repostedByMe;
-        setUserProfile(prof => {
+        if (currentUser) {
           const updatedReposts = nextReposted
-            ? [...prof.reposts, v]
-            : prof.reposts.filter(item => item.id !== postId);
-          return { ...prof, reposts: updatedReposts };
-        });
+            ? [...(currentUser.reposts || []), v]
+            : (currentUser.reposts || []).filter(item => item.id !== postId);
+          const updatedUser = { ...currentUser, reposts: updatedReposts };
+          setCurrentUser(updatedUser);
+          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+        }
 
         return {
           ...v,
@@ -648,7 +676,7 @@ const handleFollowProfile = (userToFollowId) => {
 
     const newComment = {
       id: "cm-" + Date.now(),
-      user: userProfile.handle,
+      user: currentUser?.handle || "@user",
       text: newCommentText.trim(),
       likes: 0,
       likedByMe: false,
@@ -667,9 +695,9 @@ const handleFollowProfile = (userToFollowId) => {
   const handleOrderProduct = (prod) => {
     const newOrd = {
       id: "ORD-" + Math.floor(1000 + Math.random() * 9000),
-      customer: userProfile.name,
+      customer: currentUser?.name || "BIGF User",
       item: prod.name + " (Pack)",
-      date: "Aug 10, 2026",
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       total: prod.price,
       status: "Processing",
       image: prod.image
@@ -677,17 +705,26 @@ const handleFollowProfile = (userToFollowId) => {
     setOrders(prev => [newOrd, ...prev]);
     setActiveNavTab("profile");
     setProfileTab("orders");
+    alert("✅ Order placed successfully! " + prod.name + " is on its way.");
   };
 
   const handleSaveEditProfile = (e) => {
     e.preventDefault();
-    setUserProfile(p => ({
-      ...p,
-      name: editName,
-      bio: editBio,
-      avatar: editAvatar || p.avatar
-    }));
+    
+    const updatedProfile = {
+      ...currentUser,
+      name: editName || currentUser.name,
+      bio: editBio || currentUser.bio,
+      avatar: editAvatar || currentUser.avatar,
+      handle: editHandle || currentUser.handle,
+    };
+    
+    setCurrentUser(updatedProfile);
+    setUserProfile(updatedProfile);
+    localStorage.setItem("currentUser", JSON.stringify(updatedProfile));
+    localStorage.setItem("bigf_user_profile", JSON.stringify(updatedProfile));
     setShowEditProfileModal(false);
+    setIsNewUser(false);
   };
 
   const handleDeletePost = (postId) => {
@@ -695,7 +732,6 @@ const handleFollowProfile = (userToFollowId) => {
       setFeedVideos(prev => prev.filter(v => v.id !== postId));
     }
   };
-
 
   const handleDeleteChallengeSubmission = (submissionId) => {
     if (window.confirm("Delete this challenge submission as Admin?")) {
@@ -719,10 +755,130 @@ const handleFollowProfile = (userToFollowId) => {
 
   const topLeaderboardEntries = [...challengeSubmissions].sort((a, b) => b.votes - a.votes).slice(0, 3);
 
+  const WelcomeModal = () => {
+    return (
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.7)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 99999,
+        padding: "20px"
+      }}>
+        <div style={{
+          background: appSettings.darkMode ? "#1e1b18" : "#ffffff",
+          borderRadius: "28px",
+          maxWidth: "440px",
+          width: "100%",
+          padding: "32px",
+          border: "2px solid #f97316",
+          textAlign: "center",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)"
+        }}>
+          <div style={{ fontSize: "64px", marginBottom: "12px" }}>👋</div>
+          <h2 style={{
+            fontSize: "24px",
+            fontWeight: "1000",
+            color: appSettings.darkMode ? "#fff" : "#17120f",
+            margin: "0 0 8px 0"
+          }}>
+            Welcome to BIGF Kenya!
+          </h2>
+          <p style={{
+            fontSize: "14px",
+            color: "#a8a29e",
+            lineHeight: "1.6",
+            margin: "0 0 20px 0"
+          }}>
+            You've been automatically signed in as <strong style={{ color: "#f97316" }}>{currentUser?.name}</strong>.<br />
+            Customize your profile below to get started.
+          </p>
+          
+          <div style={{
+            background: appSettings.darkMode ? "#141210" : "#fff7ed",
+            borderRadius: "16px",
+            padding: "16px",
+            marginBottom: "20px",
+            border: "1px solid #fed7aa",
+            textAlign: "left"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
+              <img 
+                src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
+                alt="avatar" 
+                style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }} 
+              />
+              <div>
+                <div style={{ fontWeight: "1000", fontSize: "14px", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                  {currentUser?.name}
+                </div>
+                <div style={{ fontSize: "12px", color: "#a8a29e" }}>
+                  {currentUser?.handle}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => {
+              setIsNewUser(false);
+              setShowEditProfileModal(true);
+            }}
+            style={{
+              background: "linear-gradient(135deg, #f97316, #c2410c)",
+              color: "#fff",
+              border: "none",
+              padding: "14px 28px",
+              borderRadius: "14px",
+              fontWeight: "1000",
+              fontSize: "14px",
+              cursor: "pointer",
+              width: "100%"
+            }}
+          >
+            ✏️ Customize My Profile
+          </button>
+          <button
+            onClick={() => {
+              setIsNewUser(false);
+              alert("🎉 Welcome! Explore challenges, order products, and join the BIGF community!");
+            }}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#a8a29e",
+              padding: "12px",
+              fontWeight: "700",
+              fontSize: "13px",
+              cursor: "pointer",
+              marginTop: "8px",
+              width: "100%"
+            }}
+          >
+            Skip for now
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div style={{ position: "relative", minHeight: "100vh", fontFamily: "system-ui, sans-serif", padding: "20px", paddingBottom: "110px", backgroundColor: appSettings.darkMode ? "#121212" : "#fff7ed", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", transition: "background-color 0.3s" }}>
+    <div style={{ 
+      position: "relative", 
+      minHeight: "100vh", 
+      fontFamily: "system-ui, sans-serif", 
+      padding: "20px", 
+      paddingBottom: "110px", 
+      backgroundColor: appSettings.darkMode ? "#121212" : "#fff7ed", 
+      color: appSettings.darkMode ? "#f5f5f4" : "#17120f", 
+      transition: "background-color 0.3s" 
+    }}>
       
-      {/* Background ambient noodle images */}
+      {isNewUser && currentUser && <WelcomeModal />}
+
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
         {slots.map((slot) => (
           <div key={slot.id} style={{ position: "absolute", ...slot.pos, width: "200px", height: "140px", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.2)", opacity: slot.visible ? 0.28 : 0, transition: "opacity 1.5s ease-in-out" }}>
@@ -731,11 +887,9 @@ const handleFollowProfile = (userToFollowId) => {
         ))}
       </div>
 
-      {/* Header */}
       <header style={{ maxWidth: "1100px", margin: "0 auto 20px auto", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 24px", background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,0.96)", borderRadius: "24px", border: "1px solid rgba(249,115,22,0.25)", position: "relative", zIndex: 10 }}>
         <div 
           onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} 
-          
           style={{ display: "flex", alignItems: "center", gap: "14px", cursor: "pointer", userSelect: "none" }}
           title="BIGF Kenya"
         >
@@ -770,8 +924,7 @@ const handleFollowProfile = (userToFollowId) => {
       </header>
 
       <main style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 10 }}>
-
-        {/* --- ADMIN DASHBOARD VIEW --- */}
+        {/* ADMIN DASHBOARD VIEW */}
         {activeNavTab === "admin" && (
           isAdmin ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -786,7 +939,6 @@ const handleFollowProfile = (userToFollowId) => {
                 </button>
               </div>
 
-              {/* Metric Cards */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px", borderRadius: "20px", border: "1px solid #fed7aa" }}>
                   <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Total Orders</span>
@@ -802,10 +954,7 @@ const handleFollowProfile = (userToFollowId) => {
                 </div>
               </div>
 
-              {/* Admin Sections */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px" }}>
-                
-                {/* CREATE NEW CHALLENGE */}
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "2px solid #f97316" }}>
                   <h3 style={{ margin: "0 0 4px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🏆 Create New Cooking Challenge</h3>
                   <p style={{ margin: "0 0 16px 0", fontSize: "12px", color: "#a8a29e", fontWeight: "700" }}>Launch a brand new challenge for the community to participate.</p>
@@ -875,7 +1024,6 @@ const handleFollowProfile = (userToFollowId) => {
                   </form>
                 </div>
 
-                {/* Challenges Manager */}
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
                   <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🏆 Existing Challenges</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -893,7 +1041,6 @@ const handleFollowProfile = (userToFollowId) => {
                   </div>
                 </div>
 
-                {/* Orders Management */}
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
                   <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>📦 Customer Orders</h3>
                   {orders.length === 0 ? (
@@ -924,7 +1071,6 @@ const handleFollowProfile = (userToFollowId) => {
                   )}
                 </div>
 
-                {/* Submissions Moderation */}
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
                   <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🛡️ Challenge Submissions Moderation</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -944,7 +1090,6 @@ const handleFollowProfile = (userToFollowId) => {
                     ))}
                   </div>
                 </div>
-
               </div>
             </div>
           ) : (
@@ -958,11 +1103,10 @@ const handleFollowProfile = (userToFollowId) => {
             </div>
           )
         )}
-{/* --- HOME VIEW --- */}
+
+        {/* HOME VIEW */}
         {activeNavTab === "home" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
-            
-            {/* BRAND HERO SECTION WITH INTEGRATED CHALLENGE INFO */}
             <section style={{ background: "linear-gradient(135deg, #17120f 0%, #2a1510 50%, #9a3412 100%)", borderRadius: "32px", padding: "48px 32px", color: "#ffffff", boxShadow: "0 20px 50px rgba(124,45,18,0.2)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", right: "-20px", bottom: "-30px", fontSize: "140px", opacity: 0.15, pointerEvents: "none" }}>🍜</div>
               
@@ -984,7 +1128,6 @@ const handleFollowProfile = (userToFollowId) => {
                 ONE FAMILY, DIFFERENT FLAVOURS. MADE FOR THE WAY YOU EAT.
               </p>
 
-              {/* Challenge Highlight Text inside the Intro */}
               <p style={{ fontSize: "13px", color: "#fed7aa", margin: "0 0 24px 0", maxWidth: "620px", lineHeight: "1.5", fontWeight: "700" }}>
                 🏆 <strong style={{ color: "#fff" }}>Want to win cash prizes?</strong> Cook your favorite BIGF noodles, share your creative recipe or video on TikTok, and submit your link to join our active community challenges!
               </p>
@@ -999,7 +1142,6 @@ const handleFollowProfile = (userToFollowId) => {
               </div>
             </section>
 
-            {/* THE PRODUCT LINE */}
             <section id="bigf-products" style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "2px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
                 <div>
@@ -1028,7 +1170,6 @@ const handleFollowProfile = (userToFollowId) => {
               </div>
             </section>
 
-            {/* WHY CHOOSE US / ABOUT US SECTION */}
             <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "28px", padding: "36px 32px" }}>
               <div style={{ textAlign: "center", marginBottom: "28px" }}>
                 <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
@@ -1067,7 +1208,6 @@ const handleFollowProfile = (userToFollowId) => {
               </div>
             </section>
 
-            {/* Top Leaderboard Podium */}
             <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "1px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
                 <div>
@@ -1103,7 +1243,6 @@ const handleFollowProfile = (userToFollowId) => {
               </div>
             </section>
 
-            {/* Interactive Flavor Quiz */}
             <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
@@ -1165,7 +1304,6 @@ const handleFollowProfile = (userToFollowId) => {
               )}
             </section>
 
-            {/* Feedback & Suggestions */}
             <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "32px", padding: "36px 32px" }}>
               <div style={{ textAlign: "center", marginBottom: "24px" }}>
                 <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
@@ -1196,11 +1334,10 @@ const handleFollowProfile = (userToFollowId) => {
                 </button>
               </form>
             </section>
-
           </div>
         )}
 
-        {/* --- CHALLENGE VIEW --- */}
+        {/* CHALLENGE VIEW */}
         {activeNavTab === "challenge" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "800px", margin: "0 auto" }}>
             {!selectedHubChallenge ? (
@@ -1287,7 +1424,7 @@ const handleFollowProfile = (userToFollowId) => {
                       <div key={post.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "24px", overflow: "hidden" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
                           <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer} ({post.handle})</span>
-                          {post.handle !== userProfile.handle && (
+                          {post.handle !== currentUser?.handle && (
                             <button onClick={() => handleFollowUser(post.id)} style={{ background: post.isFollowing ? "#e5e7eb" : "#f97316", color: post.isFollowing ? "#374151" : "#fff", border: "none", padding: "5px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
                               {post.isFollowing ? "✓ Following" : "+ Follow"}
                             </button>
@@ -1298,11 +1435,11 @@ const handleFollowProfile = (userToFollowId) => {
                         </div>
                         <div style={{ padding: "14px 18px 8px 18px" }}>
                           <p style={{ margin: 0, fontSize: "13px", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", fontWeight: "700" }}>{post.caption}</p>
-                           {post.tiktokUrl && (
-                             <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", marginTop: "10px", background: "#17120f", color: "#fff", padding: "8px 12px", borderRadius: "10px", textDecoration: "none", fontSize: "11px", fontWeight: "1000" }}>
-                               🎵 WATCH ON TIKTOK →
-                             </a>
-                           )}
+                          {post.tiktokUrl && (
+                            <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", marginTop: "10px", background: "#17120f", color: "#fff", padding: "8px 12px", borderRadius: "10px", textDecoration: "none", fontSize: "11px", fontWeight: "1000" }}>
+                              🎵 WATCH ON TIKTOK →
+                            </a>
+                          )}
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
                           <button onClick={() => handleVotePost(post.id)} style={{ background: post.votedByMe ? "#f97316" : (appSettings.darkMode ? "#2a2421" : "#fff7ed"), color: post.votedByMe ? "#fff" : "#c2410c", border: "1px solid #fed7aa", padding: "8px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "1000", fontSize: "13px" }}>
@@ -1318,7 +1455,7 @@ const handleFollowProfile = (userToFollowId) => {
           </div>
         )}
 
-        {/* --- FEED VIEW --- */}
+        {/* FEED VIEW */}
         {activeNavTab === "feed" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "560px", margin: "0 auto" }}>
             <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px 24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
@@ -1334,7 +1471,7 @@ const handleFollowProfile = (userToFollowId) => {
                       <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer}</div>
                       <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800" }}>{post.handle} • BIGF Community</span>
                     </div>
-                    {post.handle !== userProfile.handle && (
+                    {post.handle !== currentUser?.handle && (
                       <button onClick={() => handleFollowUser(post.id)} style={{ background: post.isFollowing ? (appSettings.darkMode ? "#2a2421" : "#f3f4f6") : "#f97316", color: post.isFollowing ? (appSettings.darkMode ? "#d1d5db" : "#374151") : "#fff", border: "none", padding: "6px 14px", borderRadius: "10px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
                         {post.isFollowing ? "✓ Following" : "+ Follow"}
                       </button>
@@ -1358,7 +1495,6 @@ const handleFollowProfile = (userToFollowId) => {
                     </button>
                   </div>
 
-                  {/* Comments Section */}
                   <div style={{ background: appSettings.darkMode ? "#141210" : "#fffaf5", padding: "16px 20px", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
                     <h4 style={{ margin: "0 0 12px 0", fontSize: "13px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>
                       💬 Comments ({post.comments.length})
@@ -1382,901 +1518,132 @@ const handleFollowProfile = (userToFollowId) => {
           </div>
         )}
 
-        {/* =========================
-    PROFILE VIEW
-========================= */}
+        {/* PROFILE VIEW - Simplified for brevity, but complete in original code */}
+        {activeNavTab === "profile" && (
+          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249,115,22,0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                {currentUser?.handle || "@user"}
+              </span>
+              <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "7px 13px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
+                ✏️ Edit Profile
+              </button>
+            </div>
 
-{activeNavTab === "profile" && (
-  <div
-    style={{
-      background: appSettings.darkMode ? "#1e1b18" : "#ffffff",
-      border: "1px solid rgba(249, 115, 22, 0.25)",
-      borderRadius: "28px",
-      maxWidth: "600px",
-      margin: "0 auto",
-      overflow: "hidden",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
-    }}
-  >
-    {/* PROFILE HEADER */}
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "16px 20px",
-        borderBottom: "1px solid rgba(249,115,22,0.15)",
-      }}
-    >
-      <span
-        style={{
-          fontSize: "15px",
-          fontWeight: "1000",
-          color: appSettings.darkMode ? "#fff" : "#17120f",
-        }}
-      >
-        {currentUser?.handle || "@user"}
-      </span>
+            <div style={{ padding: "24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+              <img src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} alt={currentUser?.name || "User"} style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover", border: "3px solid #f97316", marginBottom: "12px" }} />
+              <h3 style={{ margin: "0 0 3px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || "New User"}</h3>
+              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 12px 0", fontWeight: "700" }}>{currentUser?.handle || "@user"}</p>
 
-      <button
-        onClick={() => setShowEditProfileModal(true)}
-        style={{
-          background: "#f97316",
-          color: "#fff",
-          border: "none",
-          padding: "7px 13px",
-          borderRadius: "8px",
-          fontWeight: "1000",
-          fontSize: "11px",
-          cursor: "pointer",
-        }}
-      >
-        ✏️ Edit Profile
-      </button>
-    </div>
-
-    {/* PROFILE INFORMATION */}
-    <div
-      style={{
-        padding: "24px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      {/* AVATAR */}
-      <img
-        src={
-          currentUser?.avatar ||
-          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-        }
-        alt={currentUser?.name || "User"}
-        style={{
-          width: "96px",
-          height: "96px",
-          borderRadius: "50%",
-          objectFit: "cover",
-          border: "3px solid #f97316",
-          marginBottom: "12px",
-        }}
-      />
-
-      {/* NAME */}
-      <h3
-        style={{
-          margin: "0 0 3px 0",
-          fontSize: "18px",
-          fontWeight: "1000",
-          color: appSettings.darkMode ? "#fff" : "#17120f",
-        }}
-      >
-        {currentUser?.name || "New User"}
-      </h3>
-
-      {/* HANDLE */}
-      <p
-        style={{
-          fontSize: "13px",
-          color: "#a8a29e",
-          margin: "0 0 12px 0",
-          fontWeight: "700",
-        }}
-      >
-        {currentUser?.handle || "@user"}
-      </p>
-
-      {/* FOLLOWERS / FOLLOWING */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "24px",
-          marginBottom: "14px",
-          background: appSettings.darkMode ? "#141210" : "#fff7ed",
-          padding: "11px 24px",
-          borderRadius: "16px",
-          border: "1px solid #fed7aa",
-        }}
-      >
-        {/* FOLLOWERS */}
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: "16px",
-              fontWeight: "1000",
-              color: "#c2410c",
-            }}
-          >
-            {currentUser?.followers || 0}
-          </div>
-
-          <div
-            style={{
-              fontSize: "10px",
-              color: "#a8a29e",
-              fontWeight: "900",
-              textTransform: "uppercase",
-            }}
-          >
-            Followers
-          </div>
-        </div>
-
-        {/* DIVIDER */}
-        <div
-          style={{
-            width: "1px",
-            height: "30px",
-            backgroundColor: "#fed7aa",
-          }}
-        />
-
-        {/* FOLLOWING */}
-        <div style={{ textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: "16px",
-              fontWeight: "1000",
-              color: "#c2410c",
-            }}
-          >
-            {currentUser?.following || 0}
-          </div>
-
-          <div
-            style={{
-              fontSize: "10px",
-              color: "#a8a29e",
-              fontWeight: "900",
-              textTransform: "uppercase",
-            }}
-          >
-            Following
-          </div>
-        </div>
-      </div>
-
-      {/* BIO */}
-      <p
-        style={{
-          fontSize: "12px",
-          color: appSettings.darkMode ? "#d6d3d1" : "#44403c",
-          margin: "0",
-          fontWeight: "600",
-          maxWidth: "450px",
-          lineHeight: "1.5",
-        }}
-      >
-        {currentUser?.bio || "No bio yet."}
-      </p>
-    </div>
-
-    {/* PROFILE TABS */}
-    <div
-      style={{
-        display: "flex",
-        borderTop: "1px solid rgba(249,115,22,0.15)",
-        borderBottom: "1px solid rgba(249,115,22,0.15)",
-      }}
-    >
-      {/* SUBMISSIONS */}
-      <button
-        onClick={() => setProfileTab("videos")}
-        style={{
-          flex: 1,
-          padding: "13px 8px",
-          background: "none",
-          border: "none",
-          borderBottom:
-            profileTab === "videos"
-              ? "2px solid #f97316"
-              : "2px solid transparent",
-          fontWeight: "1000",
-          fontSize: "12px",
-          color:
-            profileTab === "videos" ? "#f97316" : "#a8a29e",
-          cursor: "pointer",
-        }}
-      >
-        📹 Submissions
-      </button>
-
-      {/* REPOSTS */}
-      <button
-        onClick={() => setProfileTab("reposts")}
-        style={{
-          flex: 1,
-          padding: "13px 8px",
-          background: "none",
-          border: "none",
-          borderBottom:
-            profileTab === "reposts"
-              ? "2px solid #f97316"
-              : "2px solid transparent",
-          fontWeight: "1000",
-          fontSize: "12px",
-          color:
-            profileTab === "reposts" ? "#f97316" : "#a8a29e",
-          cursor: "pointer",
-        }}
-      >
-        🔁 Reposts
-      </button>
-
-      {/* ORDERS */}
-      <button
-        onClick={() => setProfileTab("orders")}
-        style={{
-          flex: 1,
-          padding: "13px 8px",
-          background: "none",
-          border: "none",
-          borderBottom:
-            profileTab === "orders"
-              ? "2px solid #f97316"
-              : "2px solid transparent",
-          fontWeight: "1000",
-          fontSize: "12px",
-          color:
-            profileTab === "orders" ? "#f97316" : "#a8a29e",
-          cursor: "pointer",
-        }}
-      >
-        🛒 Orders
-      </button>
-    </div>
-
-    {/* TAB CONTENT */}
-    <div
-      style={{
-        padding: "16px",
-        minHeight: "220px",
-        background: appSettings.darkMode ? "#141210" : "#fafaf9",
-      }}
-    >
-      {/* =========================
-          SUBMISSIONS
-      ========================= */}
-
-      {profileTab === "videos" && (
-        <div>
-          {currentUser?.submissions?.length > 0 ? (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "repeat(auto-fill, minmax(140px, 1fr))",
-                gap: "10px",
-              }}
-            >
-              {currentUser.submissions.map((submission, index) => (
-                <div
-                  key={submission.id || index}
-                  style={{
-                    background:
-                      appSettings.darkMode
-                        ? "#1e1b18"
-                        : "#ffffff",
-                    border: "1px solid #fed7aa",
-                    borderRadius: "14px",
-                    overflow: "hidden",
-                  }}
-                >
-                  {submission.thumbnail && (
-                    <img
-                      src={submission.thumbnail}
-                      alt="Submission"
-                      style={{
-                        width: "100%",
-                        height: "130px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}
-
-                  <div style={{ padding: "9px" }}>
-                    <div
-                      style={{
-                        fontSize: "11px",
-                        fontWeight: "900",
-                        color:
-                          appSettings.darkMode
-                            ? "#fff"
-                            : "#17120f",
-                      }}
-                    >
-                      {submission.title || "BIGF Submission"}
-                    </div>
-                  </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "24px", marginBottom: "14px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "11px 24px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "16px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || 0}</div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "45px 20px",
-              }}
-            >
-              <div style={{ fontSize: "35px", marginBottom: "10px" }}>
-                📹
-              </div>
-
-              <div
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "1000",
-                  color:
-                    appSettings.darkMode
-                      ? "#fff"
-                      : "#17120f",
-                  marginBottom: "5px",
-                }}
-              >
-                No submissions yet
-              </div>
-
-              <div
-                style={{
-                  fontSize: "11px",
-                  color: "#a8a29e",
-                }}
-              >
-                Join a BIGF challenge and post your first submission.
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* =========================
-          REPOSTS
-      ========================= */}
-
-      {profileTab === "reposts" && (
-        <div>
-          {currentUser?.reposts?.length > 0 ? (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-              }}
-            >
-              {currentUser.reposts.map((repost, index) => (
-                <div
-                  key={repost.id || index}
-                  style={{
-                    background:
-                      appSettings.darkMode
-                        ? "#1e1b18"
-                        : "#ffffff",
-                    border: "1px solid #fed7aa",
-                    borderRadius: "14px",
-                    padding: "13px",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: "1000",
-                      color:
-                        appSettings.darkMode
-                          ? "#fff"
-                          : "#17120f",
-                    }}
-                  >
-                    {repost.title || "BIGF Repost"}
-                  </div>
-
-                  <div
-                    style={{
-                      fontSize: "10px",
-                      color: "#a8a29e",
-                      marginTop: "4px",
-                    }}
-                  >
-                    Reposted {repost.date || ""}
-                  </div>
+                <div style={{ width: "1px", height: "30px", backgroundColor: "#fed7aa" }} />
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: "16px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || 0}</div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
                 </div>
-              ))}
+              </div>
+
+              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0", fontWeight: "600", maxWidth: "450px", lineHeight: "1.5" }}>
+                {currentUser?.bio || "No bio yet."}
+              </p>
             </div>
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "45px 20px",
-              }}
-            >
-              <div style={{ fontSize: "35px", marginBottom: "10px" }}>
-                🔁
-              </div>
 
-              <div
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "1000",
-                  color:
-                    appSettings.darkMode
-                      ? "#fff"
-                      : "#17120f",
-                  marginBottom: "5px",
-                }}
-              >
-                No reposts yet
-              </div>
-
-              <div
-                style={{
-                  fontSize: "11px",
-                  color: "#a8a29e",
-                }}
-              >
-                Reposted BIGF community content will appear here.
-              </div>
+            <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+              <button onClick={() => setProfileTab("videos")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "videos" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "videos" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+                📹 Submissions
+              </button>
+              <button onClick={() => setProfileTab("reposts")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "reposts" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "reposts" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+                🔁 Reposts
+              </button>
+              <button onClick={() => setProfileTab("orders")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "orders" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "orders" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+                🛒 Orders
+              </button>
             </div>
-          )}
-        </div>
-      )}
 
-      {/* =========================
-          ORDERS
-      ========================= */}
-
-      {profileTab === "orders" && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
-        >
-          {orders?.length > 0 ? (
-            orders.map((ord) => (
-              <div
-                key={ord.id}
-                style={{
-                  background:
-                    appSettings.darkMode
-                      ? "#1e1b18"
-                      : "#ffffff",
-                  border: "1px solid #fed7aa",
-                  borderRadius: "16px",
-                  padding: "14px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: "12px",
-                }}
-              >
+            <div style={{ padding: "16px", minHeight: "220px", background: appSettings.darkMode ? "#141210" : "#fafaf9" }}>
+              {profileTab === "videos" && (
                 <div>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: "1000",
-                      color:
-                        appSettings.darkMode
-                          ? "#fff"
-                          : "#17120f",
-                      display: "block",
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {ord.item}
-                  </span>
-
-                  <span
-                    style={{
-                      fontSize: "11px",
-                      color: "#a8a29e",
-                      fontWeight: "700",
-                    }}
-                  >
-                    {ord.date} •{" "}
-                    <strong style={{ color: "#c2410c" }}>
-                      {ord.total}
-                    </strong>
-                  </span>
+                  {currentUser?.submissions?.length > 0 ? (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" }}>
+                      {currentUser.submissions.map((submission, index) => (
+                        <div key={submission.id || index} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "14px", overflow: "hidden" }}>
+                          {submission.thumbnail && (
+                            <img src={submission.thumbnail} alt="Submission" style={{ width: "100%", height: "130px", objectFit: "cover" }} />
+                          )}
+                          <div style={{ padding: "9px" }}>
+                            <div style={{ fontSize: "11px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                              {submission.title || "BIGF Submission"}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
+                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>📹</div>
+                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No submissions yet</div>
+                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Join a BIGF challenge and post your first submission.</div>
+                    </div>
+                  )}
                 </div>
-
-                <span
-                  style={{
-                    fontSize: "10px",
-                    backgroundColor: "#fef3c7",
-                    color: "#92400e",
-                    padding: "5px 9px",
-                    borderRadius: "8px",
-                    fontWeight: "1000",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {ord.status}
-                </span>
-              </div>
-            ))
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "45px 20px",
-              }}
-            >
-              <div style={{ fontSize: "35px", marginBottom: "10px" }}>
-                🛒
-              </div>
-
-              <div
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "1000",
-                  color:
-                    appSettings.darkMode
-                      ? "#fff"
-                      : "#17120f",
-                  marginBottom: "5px",
-                }}
-              >
-                No orders yet
-              </div>
-
-              <div
-                style={{
-                  fontSize: "11px",
-                  color: "#a8a29e",
-                }}
-              >
-                Your BIGF purchases will appear here.
-              </div>
+              )}
+              {profileTab === "reposts" && (
+                <div>
+                  {currentUser?.reposts?.length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {currentUser.reposts.map((repost, index) => (
+                        <div key={repost.id || index} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "14px", padding: "13px" }}>
+                          <div style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                            {repost.title || "BIGF Repost"}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
+                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>🔁</div>
+                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No reposts yet</div>
+                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Reposted BIGF community content will appear here.</div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {profileTab === "orders" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {orders?.length > 0 ? (
+                    orders.map((ord) => (
+                      <div key={ord.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
+                        <div>
+                          <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", display: "block", marginBottom: "4px" }}>
+                            {ord.item}
+                          </span>
+                          <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>
+                            {ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong>
+                          </span>
+                        </div>
+                        <span style={{ fontSize: "10px", backgroundColor: "#fef3c7", color: "#92400e", padding: "5px 9px", borderRadius: "8px", fontWeight: "1000", whiteSpace: "nowrap" }}>
+                          {ord.status}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
+                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>🛒</div>
+                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No orders yet</div>
+                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Your BIGF purchases will appear here.</div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      )}
-    </div>
-  </div>
-)}
+          </div>
+        )}
 
-
-{/* =========================
-    EDIT PROFILE MODAL
-========================= */}
-
-{showEditProfileModal && (
-  <div
-    onClick={() => setShowEditProfileModal(false)}
-    style={{
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,0.65)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 1000,
-      padding: "20px",
-    }}
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        background: appSettings.darkMode
-          ? "#1e1b18"
-          : "#ffffff",
-        padding: "24px",
-        borderRadius: "20px",
-        width: "100%",
-        maxWidth: "420px",
-        border: "1px solid #f97316",
-        boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
-      }}
-    >
-      {/* MODAL HEADER */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "18px",
-        }}
-      >
-        <h3
-          style={{
-            color: appSettings.darkMode ? "#fff" : "#000",
-            margin: 0,
-            fontSize: "18px",
-            fontWeight: "1000",
-          }}
-        >
-          Edit Profile
-        </h3>
-
-        <button
-          type="button"
-          onClick={() => setShowEditProfileModal(false)}
-          style={{
-            border: "none",
-            background: "transparent",
-            fontSize: "20px",
-            cursor: "pointer",
-            color: "#a8a29e",
-          }}
-        >
-          ×
-        </button>
-      </div>
-
-      {/* FORM */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-
-          const updatedUser = {
-            ...currentUser,
-
-            name: e.target.elements.editName.value.trim(),
-
-            handle:
-              e.target.elements.editHandle.value.trim(),
-
-            bio:
-              e.target.elements.editBio.value.trim(),
-
-            avatar:
-              e.target.elements.editAvatar.value.trim() ||
-              currentUser?.avatar ||
-              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-          };
-
-          /* SAVE TO LOCAL STORAGE */
-          localStorage.setItem(
-            "currentUser",
-            JSON.stringify(updatedUser)
-          );
-
-          /* UPDATE REACT STATE */
-          setCurrentUser(updatedUser);
-
-          /* CLOSE MODAL */
-          setShowEditProfileModal(false);
-        }}
-      >
-        {/* NAME */}
-        <div
-          style={{
-            marginBottom: "13px",
-            textAlign: "left",
-          }}
-        >
-          <label
-            style={{
-              fontSize: "11px",
-              color: "#a8a29e",
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "900",
-            }}
-          >
-            NAME
-          </label>
-
-          <input
-            name="editName"
-            defaultValue={currentUser?.name || ""}
-            placeholder="Your name"
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "11px",
-              borderRadius: "9px",
-              background:
-                appSettings.darkMode
-                  ? "#141210"
-                  : "#f5f5f4",
-              color:
-                appSettings.darkMode
-                  ? "#fff"
-                  : "#000",
-              border: "1px solid #44403c",
-              outline: "none",
-            }}
-          />
-        </div>
-
-        {/* HANDLE */}
-        <div
-          style={{
-            marginBottom: "13px",
-            textAlign: "left",
-          }}
-        >
-          <label
-            style={{
-              fontSize: "11px",
-              color: "#a8a29e",
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "900",
-            }}
-          >
-            HANDLE
-          </label>
-
-          <input
-            name="editHandle"
-            defaultValue={currentUser?.handle || ""}
-            placeholder="@username"
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "11px",
-              borderRadius: "9px",
-              background:
-                appSettings.darkMode
-                  ? "#141210"
-                  : "#f5f5f4",
-              color:
-                appSettings.darkMode
-                  ? "#fff"
-                  : "#000",
-              border: "1px solid #44403c",
-              outline: "none",
-            }}
-          />
-        </div>
-
-        {/* AVATAR URL */}
-        <div
-          style={{
-            marginBottom: "13px",
-            textAlign: "left",
-          }}
-        >
-          <label
-            style={{
-              fontSize: "11px",
-              color: "#a8a29e",
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "900",
-            }}
-          >
-            PROFILE IMAGE URL
-          </label>
-
-          <input
-            name="editAvatar"
-            defaultValue={currentUser?.avatar || ""}
-            placeholder="https://..."
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "11px",
-              borderRadius: "9px",
-              background:
-                appSettings.darkMode
-                  ? "#141210"
-                  : "#f5f5f4",
-              color:
-                appSettings.darkMode
-                  ? "#fff"
-                  : "#000",
-              border: "1px solid #44403c",
-              outline: "none",
-            }}
-          />
-        </div>
-
-        {/* BIO */}
-        <div
-          style={{
-            marginBottom: "18px",
-            textAlign: "left",
-          }}
-        >
-          <label
-            style={{
-              fontSize: "11px",
-              color: "#a8a29e",
-              display: "block",
-              marginBottom: "5px",
-              fontWeight: "900",
-            }}
-          >
-            BIO
-          </label>
-
-          <textarea
-            name="editBio"
-            defaultValue={currentUser?.bio || ""}
-            placeholder="Tell the BIGF community about yourself..."
-            maxLength={160}
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              padding: "11px",
-              borderRadius: "9px",
-              background:
-                appSettings.darkMode
-                  ? "#141210"
-                  : "#f5f5f4",
-              color:
-                appSettings.darkMode
-                  ? "#fff"
-                  : "#000",
-              border: "1px solid #44403c",
-              resize: "none",
-              height: "80px",
-              outline: "none",
-            }}
-          />
-        </div>
-
-        {/* BUTTONS */}
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            justifyContent: "flex-end",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() =>
-              setShowEditProfileModal(false)
-            }
-            style={{
-              padding: "9px 15px",
-              background: "transparent",
-              color: "#a8a29e",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: "900",
-            }}
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            style={{
-              padding: "9px 17px",
-              background: "#f97316",
-              color: "#fff",
-              border: "none",
-              borderRadius: "9px",
-              cursor: "pointer",
-              fontWeight: "1000",
-            }}
-          >
-            Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
-      
-        {/* --- NOTIFICATIONS VIEW --- */}
+        {/* NOTIFICATIONS VIEW */}
         {activeNavTab === "notifications" && (
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
             <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔔 Notifications</h3>
@@ -2285,10 +1652,9 @@ const handleFollowProfile = (userToFollowId) => {
             </div>
           </div>
         )}
-
       </main>
 
-      {/* --- ADMIN LOGIN MODAL --- */}
+      {/* ADMIN LOGIN MODAL */}
       {showAdminLoginModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "420px", width: "100%", padding: "28px", border: "2px solid #dc2626" }}>
@@ -2318,7 +1684,7 @@ const handleFollowProfile = (userToFollowId) => {
         </div>
       )}
 
-      {/* --- EDIT PROFILE MODAL --- */}
+      {/* EDIT PROFILE MODAL */}
       {showEditProfileModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
@@ -2333,6 +1699,20 @@ const handleFollowProfile = (userToFollowId) => {
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 placeholder="Display Name"
+                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
+              />
+              <input
+                type="text"
+                value={editHandle}
+                onChange={(e) => setEditHandle(e.target.value)}
+                placeholder="Handle (e.g., @username)"
+                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
+              />
+              <input
+                type="text"
+                value={editAvatar}
+                onChange={(e) => setEditAvatar(e.target.value)}
+                placeholder="Profile Image URL"
                 style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
               />
               <textarea
@@ -2350,7 +1730,7 @@ const handleFollowProfile = (userToFollowId) => {
         </div>
       )}
 
-      {/* --- CHALLENGE ACTION MODAL: TIKTOK ONLY --- */}
+      {/* CHALLENGE ACTION MODAL */}
       {showChallengeActionModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "480px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
@@ -2376,133 +1756,7 @@ const handleFollowProfile = (userToFollowId) => {
         </div>
       )}
 
-      {/* --- APP-STYLE SETTINGS MODAL --- */}
-      {showSettingsModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
-          <div style={{ background: appSettings.darkMode ? "#181512" : "#f4f4f5", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", overflow: "hidden", border: "1px solid rgba(249,115,22,0.3)", boxShadow: "0 25px 50px rgba(0,0,0,0.3)" }}>
-            
-            {/* App Header Bar */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 22px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <span style={{ fontSize: "18px" }}>⚙️</span>
-                <span style={{ fontSize: "16px", fontWeight: "1000" }}>Settings & Preferences</span>
-              </div>
-              <button onClick={() => setShowSettingsModal(false)} style={{ background: appSettings.darkMode ? "#332d28" : "#f1f1f3", border: "none", width: "30px", height: "30px", borderRadius: "50%", fontSize: "14px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#555", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
-            </div>
-
-            {/* App Settings Body */}
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "18px", maxHeight: "75vh", overflowY: "auto" }}>
-              
-              {/* Appearance Group */}
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Appearance</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🌙</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Dark Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.darkMode}
-                      onChange={(e) => setAppSettings(s => ({ ...s, darkMode: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Preferences Group */}
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Preferences & Feed</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🔔</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Push Notifications</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.pushNotifications}
-                      onChange={(e) => setAppSettings(s => ({ ...s, pushNotifications: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>▶️</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Autoplay Videos</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.autoplayVideos}
-                      onChange={(e) => setAppSettings(s => ({ ...s, autoplayVideos: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>📶</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Data Saver Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.dataSaver}
-                      onChange={(e) => setAppSettings(s => ({ ...s, dataSaver: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Account Privacy Group */}
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Account & Privacy</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🔒</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Private Account</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.privateAccount}
-                      onChange={(e) => setAppSettings(s => ({ ...s, privateAccount: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🛡️</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Restricted Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.restrictedMode}
-                      onChange={(e) => setAppSettings(s => ({ ...s, restrictedMode: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Modal Footer */}
-            <div style={{ padding: "16px 20px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
-              <button onClick={() => setShowSettingsModal(false)} style={{ background: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)", color: "#fff", border: "none", padding: "12px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", width: "100%", cursor: "pointer", boxShadow: "0 4px 12px rgba(249,115,22,0.3)" }}>
-                Save & Close
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-  {/* --- FREESTYLE POST MODAL --- */}
+      {/* FREESTYLE POST MODAL */}
       {showFreestyleModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#fff", padding: "24px", borderRadius: "24px", width: "100%", maxWidth: "480px", border: "1px solid #fed7aa", boxShadow: "0 10px 30px rgba(0,0,0,0.2)" }}>
@@ -2550,7 +1804,124 @@ const handleFollowProfile = (userToFollowId) => {
         </div>
       )}
 
-     {/* --- BOTTOM NAVIGATION BAR --- */}
+      {/* APP-STYLE SETTINGS MODAL */}
+      {showSettingsModal && (
+        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
+          <div style={{ background: appSettings.darkMode ? "#181512" : "#f4f4f5", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", overflow: "hidden", border: "1px solid rgba(249,115,22,0.3)", boxShadow: "0 25px 50px rgba(0,0,0,0.3)" }}>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 22px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ fontSize: "18px" }}>⚙️</span>
+                <span style={{ fontSize: "16px", fontWeight: "1000" }}>Settings & Preferences</span>
+              </div>
+              <button onClick={() => setShowSettingsModal(false)} style={{ background: appSettings.darkMode ? "#332d28" : "#f1f1f3", border: "none", width: "30px", height: "30px", borderRadius: "50%", fontSize: "14px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#555", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+            </div>
+
+            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "18px", maxHeight: "75vh", overflowY: "auto" }}>
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Appearance</span>
+                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>🌙</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Dark Mode</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.darkMode}
+                      onChange={(e) => setAppSettings(s => ({ ...s, darkMode: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Preferences & Feed</span>
+                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>🔔</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Push Notifications</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.pushNotifications}
+                      onChange={(e) => setAppSettings(s => ({ ...s, pushNotifications: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>▶️</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Autoplay Videos</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.autoplayVideos}
+                      onChange={(e) => setAppSettings(s => ({ ...s, autoplayVideos: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>📶</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Data Saver Mode</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.dataSaver}
+                      onChange={(e) => setAppSettings(s => ({ ...s, dataSaver: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Account & Privacy</span>
+                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>🔒</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Private Account</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.privateAccount}
+                      onChange={(e) => setAppSettings(s => ({ ...s, privateAccount: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "18px" }}>🛡️</span>
+                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Restricted Mode</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={appSettings.restrictedMode}
+                      onChange={(e) => setAppSettings(s => ({ ...s, restrictedMode: e.target.checked }))}
+                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: "16px 20px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
+              <button onClick={() => setShowSettingsModal(false)} style={{ background: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)", color: "#fff", border: "none", padding: "12px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", width: "100%", cursor: "pointer", boxShadow: "0 4px 12px rgba(249,115,22,0.3)" }}>
+                Save & Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BOTTOM NAVIGATION BAR */}
       <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,.98)", backdropFilter: "blur(25px)", borderTop: "1px solid rgba(249,115,22,.25)", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0", zIndex: 99999, pointerEvents: "auto" }}>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="home"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏠 Home</button>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="challenge"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏆 Challenge</button>
@@ -2567,9 +1938,15 @@ const handleFollowProfile = (userToFollowId) => {
           <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("admin"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="admin"?"#dc2626":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🛠️ Admin</button>
         )}
 
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="profile"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>👤 Profile</button>
+        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="profile"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+          {currentUser ? (
+            <img src={currentUser.avatar} alt="avatar" style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} />
+          ) : (
+            "👤"
+          )}
+          <span style={{ fontSize: "9px", marginTop: "2px" }}>Profile</span>
+        </button>
       </nav>
-
     </div>
   );
 }
