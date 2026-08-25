@@ -705,7 +705,6 @@ export default function App() {
     };
     setOrders(prev => [newOrd, ...prev]);
     
-    // Add order to user's orders
     if (currentUser) {
       const updatedUser = {
         ...currentUser,
@@ -1541,7 +1540,7 @@ export default function App() {
           </div>
         )}
 
-        {/* PROFILE VIEW - WITH GALLERY SELECTION AND ACCOUNT OVERVIEW */}
+        {/* PROFILE VIEW */}
         {activeNavTab === "profile" && (
           <div style={{ 
             background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
@@ -1552,7 +1551,6 @@ export default function App() {
             overflow: "hidden", 
             boxShadow: "0 10px 30px rgba(0,0,0,0.06)" 
           }}>
-            {/* PROFILE HEADER */}
             <div style={{ 
               display: "flex", 
               justifyContent: "space-between", 
@@ -1584,7 +1582,6 @@ export default function App() {
               </button>
             </div>
 
-            {/* PROFILE INFO - ALWAYS VISIBLE */}
             <div style={{ 
               padding: "24px", 
               display: "flex", 
@@ -1592,7 +1589,6 @@ export default function App() {
               alignItems: "center", 
               textAlign: "center" 
             }}>
-              {/* AVATAR WITH DIRECT GALLERY SELECTION */}
               <div style={{ position: "relative", marginBottom: "16px" }}>
                 <img 
                   src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
@@ -1655,7 +1651,6 @@ export default function App() {
                 />
               </div>
 
-              {/* NAME */}
               <h2 style={{ 
                 margin: "0 0 4px 0", 
                 fontSize: "22px", 
@@ -1665,7 +1660,6 @@ export default function App() {
                 {currentUser?.name || "New User"}
               </h2>
 
-              {/* HANDLE */}
               <p style={{ 
                 fontSize: "14px", 
                 color: "#a8a29e", 
@@ -1675,7 +1669,6 @@ export default function App() {
                 {currentUser?.handle || "@user"}
               </p>
 
-              {/* FOLLOWERS / FOLLOWING */}
               <div style={{ 
                 display: "flex", 
                 alignItems: "center", 
@@ -1705,7 +1698,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* BIO */}
               <p style={{ 
                 fontSize: "13px", 
                 color: appSettings.darkMode ? "#d6d3d1" : "#44403c", 
@@ -1717,7 +1709,6 @@ export default function App() {
                 {currentUser?.bio || "No bio yet. Click Edit Profile to add one!"}
               </p>
 
-              {/* ACCOUNT STATS */}
               <div style={{ 
                 display: "grid", 
                 gridTemplateColumns: "repeat(3, 1fr)", 
@@ -1771,7 +1762,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* PROFILE TABS */}
             <div style={{ 
               display: "flex", 
               borderTop: "1px solid rgba(249,115,22,0.15)", 
@@ -1847,13 +1837,11 @@ export default function App() {
               </button>
             </div>
 
-            {/* TAB CONTENT */}
             <div style={{ 
               padding: "20px", 
               minHeight: "250px", 
               background: appSettings.darkMode ? "#141210" : "#fafaf9" 
             }}>
-              {/* OVERVIEW TAB */}
               {profileTab === "overview" && (
                 <div>
                   <h4 style={{ 
@@ -1919,7 +1907,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* SUBMISSIONS TAB */}
               {profileTab === "submissions" && (
                 <div>
                   {currentUser?.submissions?.length > 0 ? (
@@ -1959,7 +1946,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* REPOSTS TAB */}
               {profileTab === "reposts" && (
                 <div>
                   {currentUser?.reposts?.length > 0 ? (
@@ -1994,7 +1980,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* ORDERS TAB */}
               {profileTab === "orders" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {currentUser?.orders?.length > 0 ? (
@@ -2050,20 +2035,20 @@ export default function App() {
           </div>
         )}
 
-        {/* NOTIFICATIONS VIEW */}
+        {/* NOTIFICATIONS VIEW - Updated without admin hint */}
         {activeNavTab === "notifications" && (
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
             <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔔 Notifications</h3>
             <div style={{ backgroundColor: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "14px", borderRadius: "14px", border: "1px solid #fed7aa" }}>
               <div style={{ fontSize: "13px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                Use Ctrl + Shift + A to log in as admin anytime.
+                Welcome to BIGF Kenya! Stay tuned for updates, new challenges, and community announcements. 🎉
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {/* ADMIN LOGIN MODAL */}
+      {/* ADMIN LOGIN MODAL - Remains accessible via Ctrl+Shift+A */}
       {showAdminLoginModal && (
         <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
           <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "420px", width: "100%", padding: "28px", border: "2px solid #dc2626" }}>
@@ -2074,7 +2059,7 @@ export default function App() {
             
             <h3 style={{ fontSize: "20px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", margin: "0 0 6px 0" }}>Admin Dashboard Login</h3>
             <p style={{ fontSize: "13px", color: "#a8a29e", lineHeight: "1.5", margin: "0 0 16px 0" }}>
-              Enter administrator passcode. (Hint: <strong style={{ color: "#dc2626" }}>admin123</strong> or <strong style={{ color: "#dc2626" }}>BIGF2026</strong>)
+              Enter administrator passcode.
             </p>
 
             <form onSubmit={handleAdminLogin} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -2103,7 +2088,6 @@ export default function App() {
             </div>
 
             <form onSubmit={handleSaveEditProfile} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {/* Avatar Upload in Edit Modal */}
               <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "8px" }}>
                 <img 
                   src={editAvatar || "https://i.pravatar.cc/150?img=1"} 
@@ -2374,7 +2358,7 @@ export default function App() {
         </div>
       )}
 
-      {/* BOTTOM NAVIGATION BAR */}
+      {/* BOTTOM NAVIGATION BAR - WITH NOTIFICATIONS BUTTON */}
       <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,.98)", backdropFilter: "blur(25px)", borderTop: "1px solid rgba(249,115,22,.25)", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0", zIndex: 99999, pointerEvents: "auto" }}>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="home"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏠 Home</button>
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="challenge"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏆 Challenge</button>
@@ -2386,6 +2370,8 @@ export default function App() {
         }} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #fff", cursor: "pointer", background: "linear-gradient(135deg,#f97316,#c2410c)", color: "#fff", fontSize: "24px", fontWeight: "900", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 15px rgba(249,115,22,0.4)", pointerEvents: "auto" }}>+</button>
         
         <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("feed"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="feed"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🔥 Feed</button>
+        
+        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("notifications"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="notifications"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🔔</button>
         
         {isAdmin && (
           <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("admin"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="admin"?"#dc2626":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🛠️ Admin</button>
