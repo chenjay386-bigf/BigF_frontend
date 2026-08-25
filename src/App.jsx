@@ -234,7 +234,8 @@ export default function App() {
       reposts: [],
       votedPosts: [],
       submissions: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      orders: []
     };
   });
 
@@ -318,7 +319,7 @@ export default function App() {
     };
   });
 
-  const [profileTab, setProfileTab] = useState("videos");
+  const [profileTab, setProfileTab] = useState("overview");
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [editName, setEditName] = useState(currentUser?.name || userProfile.name);
@@ -703,6 +704,17 @@ export default function App() {
       image: prod.image
     };
     setOrders(prev => [newOrd, ...prev]);
+    
+    // Add order to user's orders
+    if (currentUser) {
+      const updatedUser = {
+        ...currentUser,
+        orders: [...(currentUser.orders || []), newOrd]
+      };
+      setCurrentUser(updatedUser);
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
+    
     setActiveNavTab("profile");
     setProfileTab("orders");
     alert("✅ Order placed successfully! " + prod.name + " is on its way.");
@@ -725,6 +737,17 @@ export default function App() {
     localStorage.setItem("bigf_user_profile", JSON.stringify(updatedProfile));
     setShowEditProfileModal(false);
     setIsNewUser(false);
+  };
+
+  const handleAvatarFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDeletePost = (postId) => {
@@ -1518,123 +1541,507 @@ export default function App() {
           </div>
         )}
 
-        {/* PROFILE VIEW - Simplified for brevity, but complete in original code */}
+        {/* PROFILE VIEW - WITH GALLERY SELECTION AND ACCOUNT OVERVIEW */}
         {activeNavTab === "profile" && (
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid rgba(249,115,22,0.25)", borderRadius: "28px", maxWidth: "600px", margin: "0 auto", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <span style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                {currentUser?.handle || "@user"}
+          <div style={{ 
+            background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+            border: "1px solid rgba(249,115,22,0.25)", 
+            borderRadius: "28px", 
+            maxWidth: "700px", 
+            margin: "0 auto", 
+            overflow: "hidden", 
+            boxShadow: "0 10px 30px rgba(0,0,0,0.06)" 
+          }}>
+            {/* PROFILE HEADER */}
+            <div style={{ 
+              display: "flex", 
+              justifyContent: "space-between", 
+              alignItems: "center", 
+              padding: "16px 24px", 
+              borderBottom: "1px solid rgba(249,115,22,0.15)" 
+            }}>
+              <span style={{ 
+                fontSize: "15px", 
+                fontWeight: "1000", 
+                color: appSettings.darkMode ? "#fff" : "#17120f" 
+              }}>
+                👤 My Account
               </span>
-              <button onClick={() => setShowEditProfileModal(true)} style={{ background: "#f97316", color: "#fff", border: "none", padding: "7px 13px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
+              <button 
+                onClick={() => setShowEditProfileModal(true)} 
+                style={{ 
+                  background: "#f97316", 
+                  color: "#fff", 
+                  border: "none", 
+                  padding: "8px 16px", 
+                  borderRadius: "10px", 
+                  fontWeight: "1000", 
+                  fontSize: "12px", 
+                  cursor: "pointer" 
+                }}
+              >
                 ✏️ Edit Profile
               </button>
             </div>
 
-            <div style={{ padding: "24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
-              <img src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} alt={currentUser?.name || "User"} style={{ width: "96px", height: "96px", borderRadius: "50%", objectFit: "cover", border: "3px solid #f97316", marginBottom: "12px" }} />
-              <h3 style={{ margin: "0 0 3px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{currentUser?.name || "New User"}</h3>
-              <p style={{ fontSize: "13px", color: "#a8a29e", margin: "0 0 12px 0", fontWeight: "700" }}>{currentUser?.handle || "@user"}</p>
+            {/* PROFILE INFO - ALWAYS VISIBLE */}
+            <div style={{ 
+              padding: "24px", 
+              display: "flex", 
+              flexDirection: "column", 
+              alignItems: "center", 
+              textAlign: "center" 
+            }}>
+              {/* AVATAR WITH DIRECT GALLERY SELECTION */}
+              <div style={{ position: "relative", marginBottom: "16px" }}>
+                <img 
+                  src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
+                  alt={currentUser?.name || "User"} 
+                  style={{ 
+                    width: "120px", 
+                    height: "120px", 
+                    borderRadius: "50%", 
+                    objectFit: "cover", 
+                    border: "4px solid #f97316",
+                    boxShadow: "0 4px 20px rgba(249,115,22,0.3)"
+                  }} 
+                />
+                <button
+                  onClick={() => document.getElementById('avatarUploadDirect').click()}
+                  style={{
+                    position: "absolute",
+                    bottom: "4px",
+                    right: "4px",
+                    background: "#f97316",
+                    color: "#fff",
+                    border: "3px solid #fff",
+                    borderRadius: "50%",
+                    width: "36px",
+                    height: "36px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    boxShadow: "0 2px 10px rgba(0,0,0,0.2)"
+                  }}
+                  title="Change profile picture"
+                >
+                  📷
+                </button>
+                <input
+                  id="avatarUploadDirect"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        const updatedUser = {
+                          ...currentUser,
+                          avatar: reader.result
+                        };
+                        setCurrentUser(updatedUser);
+                        setUserProfile(updatedUser);
+                        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+                        localStorage.setItem("bigf_user_profile", JSON.stringify(updatedUser));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "24px", marginBottom: "14px", background: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "11px 24px", borderRadius: "16px", border: "1px solid #fed7aa" }}>
+              {/* NAME */}
+              <h2 style={{ 
+                margin: "0 0 4px 0", 
+                fontSize: "22px", 
+                fontWeight: "1000", 
+                color: appSettings.darkMode ? "#fff" : "#17120f" 
+              }}>
+                {currentUser?.name || "New User"}
+              </h2>
+
+              {/* HANDLE */}
+              <p style={{ 
+                fontSize: "14px", 
+                color: "#a8a29e", 
+                margin: "0 0 16px 0", 
+                fontWeight: "700" 
+              }}>
+                {currentUser?.handle || "@user"}
+              </p>
+
+              {/* FOLLOWERS / FOLLOWING */}
+              <div style={{ 
+                display: "flex", 
+                alignItems: "center", 
+                gap: "32px", 
+                marginBottom: "16px", 
+                background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                padding: "12px 32px", 
+                borderRadius: "16px", 
+                border: "1px solid #fed7aa" 
+              }}>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "16px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.followers || 0}</div>
-                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Followers</div>
+                  <div style={{ fontSize: "20px", fontWeight: "1000", color: "#c2410c" }}>
+                    {currentUser?.followers || 0}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>
+                    Followers
+                  </div>
                 </div>
-                <div style={{ width: "1px", height: "30px", backgroundColor: "#fed7aa" }} />
+                <div style={{ width: "1px", height: "35px", backgroundColor: "#fed7aa" }} />
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "16px", fontWeight: "1000", color: "#c2410c" }}>{currentUser?.following || 0}</div>
-                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Following</div>
+                  <div style={{ fontSize: "20px", fontWeight: "1000", color: "#c2410c" }}>
+                    {currentUser?.following || 0}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>
+                    Following
+                  </div>
                 </div>
               </div>
 
-              <p style={{ fontSize: "12px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0", fontWeight: "600", maxWidth: "450px", lineHeight: "1.5" }}>
-                {currentUser?.bio || "No bio yet."}
+              {/* BIO */}
+              <p style={{ 
+                fontSize: "13px", 
+                color: appSettings.darkMode ? "#d6d3d1" : "#44403c", 
+                margin: "0 0 16px 0", 
+                fontWeight: "600", 
+                maxWidth: "500px", 
+                lineHeight: "1.6" 
+              }}>
+                {currentUser?.bio || "No bio yet. Click Edit Profile to add one!"}
               </p>
+
+              {/* ACCOUNT STATS */}
+              <div style={{ 
+                display: "grid", 
+                gridTemplateColumns: "repeat(3, 1fr)", 
+                gap: "12px", 
+                width: "100%", 
+                maxWidth: "500px",
+                marginTop: "8px"
+              }}>
+                <div style={{ 
+                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                  padding: "12px", 
+                  borderRadius: "12px", 
+                  border: "1px solid #fed7aa",
+                  textAlign: "center"
+                }}>
+                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
+                    {currentUser?.submissions?.length || 0}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
+                    Submissions
+                  </div>
+                </div>
+                <div style={{ 
+                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                  padding: "12px", 
+                  borderRadius: "12px", 
+                  border: "1px solid #fed7aa",
+                  textAlign: "center"
+                }}>
+                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
+                    {currentUser?.reposts?.length || 0}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
+                    Reposts
+                  </div>
+                </div>
+                <div style={{ 
+                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                  padding: "12px", 
+                  borderRadius: "12px", 
+                  border: "1px solid #fed7aa",
+                  textAlign: "center"
+                }}>
+                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
+                    {currentUser?.orders?.length || 0}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
+                    Orders
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div style={{ display: "flex", borderTop: "1px solid rgba(249,115,22,0.15)", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <button onClick={() => setProfileTab("videos")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "videos" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "videos" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+            {/* PROFILE TABS */}
+            <div style={{ 
+              display: "flex", 
+              borderTop: "1px solid rgba(249,115,22,0.15)", 
+              borderBottom: "1px solid rgba(249,115,22,0.15)" 
+            }}>
+              <button 
+                onClick={() => setProfileTab("overview")} 
+                style={{ 
+                  flex: 1, 
+                  padding: "14px 8px", 
+                  background: "none", 
+                  border: "none", 
+                  borderBottom: profileTab === "overview" ? "3px solid #f97316" : "3px solid transparent", 
+                  fontWeight: "1000", 
+                  fontSize: "12px", 
+                  color: profileTab === "overview" ? "#f97316" : "#a8a29e", 
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
+                📊 Overview
+              </button>
+              <button 
+                onClick={() => setProfileTab("submissions")} 
+                style={{ 
+                  flex: 1, 
+                  padding: "14px 8px", 
+                  background: "none", 
+                  border: "none", 
+                  borderBottom: profileTab === "submissions" ? "3px solid #f97316" : "3px solid transparent", 
+                  fontWeight: "1000", 
+                  fontSize: "12px", 
+                  color: profileTab === "submissions" ? "#f97316" : "#a8a29e", 
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
                 📹 Submissions
               </button>
-              <button onClick={() => setProfileTab("reposts")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "reposts" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "reposts" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+              <button 
+                onClick={() => setProfileTab("reposts")} 
+                style={{ 
+                  flex: 1, 
+                  padding: "14px 8px", 
+                  background: "none", 
+                  border: "none", 
+                  borderBottom: profileTab === "reposts" ? "3px solid #f97316" : "3px solid transparent", 
+                  fontWeight: "1000", 
+                  fontSize: "12px", 
+                  color: profileTab === "reposts" ? "#f97316" : "#a8a29e", 
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
                 🔁 Reposts
               </button>
-              <button onClick={() => setProfileTab("orders")} style={{ flex: 1, padding: "13px 8px", background: "none", border: "none", borderBottom: profileTab === "orders" ? "2px solid #f97316" : "2px solid transparent", fontWeight: "1000", fontSize: "12px", color: profileTab === "orders" ? "#f97316" : "#a8a29e", cursor: "pointer" }}>
+              <button 
+                onClick={() => setProfileTab("orders")} 
+                style={{ 
+                  flex: 1, 
+                  padding: "14px 8px", 
+                  background: "none", 
+                  border: "none", 
+                  borderBottom: profileTab === "orders" ? "3px solid #f97316" : "3px solid transparent", 
+                  fontWeight: "1000", 
+                  fontSize: "12px", 
+                  color: profileTab === "orders" ? "#f97316" : "#a8a29e", 
+                  cursor: "pointer",
+                  transition: "all 0.2s"
+                }}
+              >
                 🛒 Orders
               </button>
             </div>
 
-            <div style={{ padding: "16px", minHeight: "220px", background: appSettings.darkMode ? "#141210" : "#fafaf9" }}>
-              {profileTab === "videos" && (
+            {/* TAB CONTENT */}
+            <div style={{ 
+              padding: "20px", 
+              minHeight: "250px", 
+              background: appSettings.darkMode ? "#141210" : "#fafaf9" 
+            }}>
+              {/* OVERVIEW TAB */}
+              {profileTab === "overview" && (
+                <div>
+                  <h4 style={{ 
+                    margin: "0 0 16px 0", 
+                    fontSize: "15px", 
+                    fontWeight: "1000", 
+                    color: appSettings.darkMode ? "#fff" : "#17120f" 
+                  }}>
+                    📊 Account Overview
+                  </h4>
+                  
+                  <div style={{ 
+                    display: "grid", 
+                    gridTemplateColumns: "1fr 1fr", 
+                    gap: "12px",
+                    marginBottom: "16px"
+                  }}>
+                    <div style={{ 
+                      background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                      padding: "16px", 
+                      borderRadius: "12px", 
+                      border: "1px solid #fed7aa" 
+                    }}>
+                      <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Created</div>
+                      <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
+                        {currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : "Today"}
+                      </div>
+                    </div>
+                    <div style={{ 
+                      background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                      padding: "16px", 
+                      borderRadius: "12px", 
+                      border: "1px solid #fed7aa" 
+                    }}>
+                      <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>User ID</div>
+                      <div style={{ fontSize: "12px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px", wordBreak: "break-all" }}>
+                        {currentUser?.id || "N/A"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ 
+                    background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                    padding: "16px", 
+                    borderRadius: "12px", 
+                    border: "1px solid #fed7aa" 
+                  }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Status</div>
+                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#10b981", marginTop: "4px" }}>
+                          ✅ Active
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Total Activity</div>
+                        <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
+                          {(currentUser?.submissions?.length || 0) + (currentUser?.reposts?.length || 0) + (currentUser?.orders?.length || 0)} actions
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SUBMISSIONS TAB */}
+              {profileTab === "submissions" && (
                 <div>
                   {currentUser?.submissions?.length > 0 ? (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "12px" }}>
                       {currentUser.submissions.map((submission, index) => (
-                        <div key={submission.id || index} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "14px", overflow: "hidden" }}>
+                        <div key={submission.id || index} style={{ 
+                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                          border: "1px solid #fed7aa", 
+                          borderRadius: "14px", 
+                          overflow: "hidden" 
+                        }}>
                           {submission.thumbnail && (
-                            <img src={submission.thumbnail} alt="Submission" style={{ width: "100%", height: "130px", objectFit: "cover" }} />
+                            <img src={submission.thumbnail} alt="Submission" style={{ width: "100%", height: "140px", objectFit: "cover" }} />
                           )}
-                          <div style={{ padding: "9px" }}>
+                          <div style={{ padding: "10px" }}>
                             <div style={{ fontSize: "11px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                              {submission.title || "BIGF Submission"}
+                              {submission.challengeTitle || "BIGF Submission"}
+                            </div>
+                            <div style={{ fontSize: "10px", color: "#a8a29e", marginTop: "4px" }}>
+                              ⭐ {submission.votes || 0} votes
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
-                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>📹</div>
-                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No submissions yet</div>
-                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Join a BIGF challenge and post your first submission.</div>
+                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>📹</div>
+                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
+                        No submissions yet
+                      </div>
+                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
+                        Join a BIGF challenge and post your first submission!
+                      </div>
                     </div>
                   )}
                 </div>
               )}
+
+              {/* REPOSTS TAB */}
               {profileTab === "reposts" && (
                 <div>
                   {currentUser?.reposts?.length > 0 ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                       {currentUser.reposts.map((repost, index) => (
-                        <div key={repost.id || index} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "14px", padding: "13px" }}>
-                          <div style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                            {repost.title || "BIGF Repost"}
+                        <div key={repost.id || index} style={{ 
+                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                          border: "1px solid #fed7aa", 
+                          borderRadius: "14px", 
+                          padding: "14px" 
+                        }}>
+                          <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                            {repost.caption || "BIGF Repost"}
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#a8a29e", marginTop: "4px" }}>
+                            🔁 Reposted from {repost.pioneer || "a BIGF member"}
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
-                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>🔁</div>
-                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No reposts yet</div>
-                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Reposted BIGF community content will appear here.</div>
+                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>🔁</div>
+                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
+                        No reposts yet
+                      </div>
+                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
+                        Reposted BIGF community content will appear here.
+                      </div>
                     </div>
                   )}
                 </div>
               )}
+
+              {/* ORDERS TAB */}
               {profileTab === "orders" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {orders?.length > 0 ? (
-                    orders.map((ord) => (
-                      <div key={ord.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
-                        <div>
-                          <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", display: "block", marginBottom: "4px" }}>
-                            {ord.item}
-                          </span>
-                          <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>
-                            {ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong>
-                          </span>
+                  {currentUser?.orders?.length > 0 ? (
+                    currentUser.orders.map((ord) => (
+                      <div key={ord.id} style={{ 
+                        background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                        border: "1px solid #fed7aa", 
+                        borderRadius: "16px", 
+                        padding: "16px", 
+                        display: "flex", 
+                        justifyContent: "space-between", 
+                        alignItems: "center", 
+                        gap: "12px" 
+                      }}>
+                        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                          <img src={ord.image} alt={ord.item} style={{ width: "50px", height: "50px", borderRadius: "10px", objectFit: "cover" }} />
+                          <div>
+                            <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                              {ord.item}
+                            </div>
+                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>
+                              {ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong>
+                            </div>
+                          </div>
                         </div>
-                        <span style={{ fontSize: "10px", backgroundColor: "#fef3c7", color: "#92400e", padding: "5px 9px", borderRadius: "8px", fontWeight: "1000", whiteSpace: "nowrap" }}>
+                        <span style={{ 
+                          fontSize: "10px", 
+                          backgroundColor: ord.status === "Delivered" ? "#d1fae5" : ord.status === "Dispatched" ? "#fef3c7" : "#fee2e2",
+                          color: ord.status === "Delivered" ? "#065f46" : ord.status === "Dispatched" ? "#92400e" : "#991b1b",
+                          padding: "5px 10px", 
+                          borderRadius: "8px", 
+                          fontWeight: "1000", 
+                          whiteSpace: "nowrap" 
+                        }}>
                           {ord.status}
                         </span>
                       </div>
                     ))
                   ) : (
-                    <div style={{ textAlign: "center", padding: "45px 20px" }}>
-                      <div style={{ fontSize: "35px", marginBottom: "10px" }}>🛒</div>
-                      <div style={{ fontSize: "14px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>No orders yet</div>
-                      <div style={{ fontSize: "11px", color: "#a8a29e" }}>Your BIGF purchases will appear here.</div>
+                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>🛒</div>
+                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
+                        No orders yet
+                      </div>
+                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
+                        Your BIGF purchases will appear here.
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1648,7 +2055,9 @@ export default function App() {
           <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
             <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔔 Notifications</h3>
             <div style={{ backgroundColor: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "14px", borderRadius: "14px", border: "1px solid #fed7aa" }}>
-              <div style={{ fontSize: "13px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>Use Ctrl + Shift + A to log in as admin anytime.</div>
+              <div style={{ fontSize: "13px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                Use Ctrl + Shift + A to log in as admin anytime.
+              </div>
             </div>
           </div>
         )}
@@ -1694,6 +2103,52 @@ export default function App() {
             </div>
 
             <form onSubmit={handleSaveEditProfile} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {/* Avatar Upload in Edit Modal */}
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "8px" }}>
+                <img 
+                  src={editAvatar || "https://i.pravatar.cc/150?img=1"} 
+                  alt="Profile" 
+                  style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} 
+                />
+                <div>
+                  <label style={{ fontSize: "11px", fontWeight: "1000", color: "#a8a29e", display: "block", marginBottom: "4px" }}>
+                    Choose from Gallery
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('avatarUploadModal').click()}
+                    style={{
+                      background: "#f97316",
+                      color: "#fff",
+                      border: "none",
+                      padding: "6px 14px",
+                      borderRadius: "8px",
+                      fontWeight: "700",
+                      fontSize: "12px",
+                      cursor: "pointer"
+                    }}
+                  >
+                    📷 Select Image
+                  </button>
+                  <input
+                    id="avatarUploadModal"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setEditAvatar(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+
               <input
                 type="text"
                 value={editName}
@@ -1708,23 +2163,21 @@ export default function App() {
                 placeholder="Handle (e.g., @username)"
                 style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
               />
-              <input
-                type="text"
-                value={editAvatar}
-                onChange={(e) => setEditAvatar(e.target.value)}
-                placeholder="Profile Image URL"
-                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
-              />
               <textarea
                 value={editBio}
                 onChange={(e) => setEditBio(e.target.value)}
                 placeholder="Bio"
-                rows={2}
+                rows={3}
                 style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }}
               />
-              <button type="submit" style={{ background: "#f97316", color: "#fff", border: "none", padding: "14px", borderRadius: "12px", fontWeight: "1000", width: "100%", cursor: "pointer" }}>
-                Save Profile Changes
-              </button>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ flex: 1, background: "transparent", border: "1px solid #fed7aa", padding: "12px", borderRadius: "10px", fontWeight: "700", cursor: "pointer", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ flex: 2, background: "#f97316", color: "#fff", border: "none", padding: "12px", borderRadius: "10px", fontWeight: "1000", cursor: "pointer" }}>
+                  Save Changes
+                </button>
+              </div>
             </form>
           </div>
         </div>
