@@ -34,106 +34,8 @@ const INITIAL_PRODUCTS = [
   }
 ];
 
-const INITIAL_FEED_VIDEOS = [
-  {
-    id: "feed-1",
-    pioneer: "Amina Otieno",
-    handle: "@amina_otieno",
-    thumbnail: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
-    caption: "Just made the ultimate BIGF Chicken Noodles with boiled eggs and fresh green onions! 🔥🍜",
-    likes: 42,
-    reposts: 12,
-    likedByMe: false,
-    repostedByMe: false,
-    isFollowing: false,
-    comments: [
-      {
-        id: "cm-1",
-        user: "@kiprop_cooks",
-        text: "Looks amazing! Did you add extra chili oil?",
-        likes: 5,
-        likedByMe: false,
-        replies: [
-          {
-            id: "rep-1",
-            user: "@amina_otieno",
-            text: "Yes! A generous dash of Sichuan chili oil makes all the difference 🌶️",
-            likes: 2,
-            likedByMe: false
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: "feed-2",
-    pioneer: "Kiprop Cooks",
-    handle: "@kiprop_cooks",
-    thumbnail: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&q=80",
-    caption: "BIGF Sweet Chili noodles with green bell peppers and crispy garlic. Quick, simple and seriously good! 🌶️✨",
-    likes: 38,
-    reposts: 9,
-    likedByMe: false,
-    repostedByMe: false,
-    isFollowing: false,
-    comments: []
-  },
-  {
-    id: "feed-3",
-    pioneer: "Wanjiru E",
-    handle: "@wanjiru_E",
-    thumbnail: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=600&q=80",
-    caption: "Midnight BIGF Beef noodles with extra chili oil! 🍜😋 What is your favorite BIGF combo?",
-    likes: 64,
-    reposts: 15,
-    likedByMe: false,
-    repostedByMe: false,
-    isFollowing: false,
-    comments: []
-  }
-];
-
-const INITIAL_CHALLENGE_SUBMISSIONS = [
-  {
-    id: "submission-1",
-    challengeId: "c1",
-    challengeTitle: "BIGF Season 1 Noodle Rumble Challenge",
-    pioneer: "Amina Otieno",
-    handle: "@amina_otieno",
-    thumbnail: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
-    caption: "My BIGF Noodle Rumble entry with boiled eggs and fresh green onions! 🔥 #NoodleRumble",
-    tiktokUrl: "https://www.tiktok.com/",
-    votes: 42,
-    votedByMe: false,
-    isFollowing: false
-  },
-  {
-    id: "submission-2",
-    challengeId: "c2",
-    challengeTitle: "5-Minute Speedy Chef Challenge",
-    pioneer: "Kiprop Cooks",
-    handle: "@kiprop_cooks",
-    thumbnail: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&q=80",
-    caption: "Sweet Chili noodles with green bell peppers and crispy garlic in under 5 minutes! 🌶️✨ #SpeedyChef",
-    tiktokUrl: "https://www.tiktok.com/",
-    votes: 38,
-    votedByMe: false,
-    isFollowing: false
-  },
-  {
-    id: "submission-3",
-    challengeId: "c3",
-    challengeTitle: "Midnight Cravings Special Mix",
-    pioneer: "Wanjiru E",
-    handle: "@wanjiru_E",
-    thumbnail: "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=600&q=80",
-    caption: "My BIGF Beef Midnight Cravings entry with extra chili oil! 🍜 #MidnightCravings",
-    tiktokUrl: "https://www.tiktok.com/",
-    votes: 64,
-    votedByMe: false,
-    isFollowing: false
-  }
-];
+const INITIAL_FEATURED_ENTRIES = [];
+const INITIAL_CHALLENGE_SUBMISSIONS = [];
 
 const INITIAL_CHALLENGES = [
   {
@@ -144,11 +46,11 @@ const INITIAL_CHALLENGES = [
     prize: "KSh 15,000 Cash + BIGF Mega Supply",
     tag: "#NoodleRumble",
     category: "Main",
-    description: "Cook your favorite BIGF noodles with your own twist, post your entry on TikTok, then submit the TikTok video link here for review and voting.",
+    description: "Cook your favorite BIGF noodles with your own twist, post your entry on TikTok, then submit the TikTok video link here for review.",
     rules: [
       "1. Create your BIGF challenge video and publish it on TikTok.",
       "2. Copy your TikTok video link and submit it here for review.",
-      "3. Gather community votes (⭐) on the BIGF Challenge page!"
+      "3. TikTok Likes determine the winner!"
     ]
   },
   {
@@ -163,7 +65,7 @@ const INITIAL_CHALLENGES = [
     rules: [
       "1. Publish your BIGF challenge video on TikTok.",
       "2. Submit the TikTok video link for review.",
-      "3. Get community votes to win!"
+      "3. TikTok Likes determine the winner!"
     ]
   },
   {
@@ -178,7 +80,7 @@ const INITIAL_CHALLENGES = [
     rules: [
       "1. Publish your late-night BIGF creation on TikTok.",
       "2. Submit the TikTok video link here.",
-      "3. Win via community votes!"
+      "3. TikTok Likes determine the winner!"
     ]
   }
 ];
@@ -199,50 +101,74 @@ const getRandomName = () => {
 
 export default function App() {
   const [activeNavTab, setActiveNavTab] = useState("home");
-  const [feedVideos, setFeedVideos] = useState(INITIAL_FEED_VIDEOS);
+  const [featuredEntries, setFeaturedEntries] = useState(INITIAL_FEATURED_ENTRIES);
   const [challengeSubmissions, setChallengeSubmissions] = useState(INITIAL_CHALLENGE_SUBMISSIONS);
   const [challenges, setChallenges] = useState(INITIAL_CHALLENGES);
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [selectedHubChallenge, setSelectedHubChallenge] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  
   const [quizStep, setQuizStep] = useState(1);
   const [quizSpice, setQuizSpice] = useState(null);
   const [quizResult, setQuizResult] = useState(null);
 
+  // Auth state - FIXED
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem("currentUser");
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.id) {
-          return parsed;
-        }
+        return JSON.parse(saved);
       } catch (e) {}
     }
-    const firstName = getRandomName();
-    const randomNum = Math.floor(100 + Math.random() * 900);
-    const handle = "@" + firstName.toLowerCase() + "_" + randomNum;
-    return {
-      id: "user-" + Date.now(),
-      name: firstName,
-      handle: handle,
-      bio: "BIGF food lover 🍜✨",
-      avatar: "https://i.pravatar.cc/150?img=" + Math.floor(1 + Math.random() * 70),
-      followers: 0,
-      following: 0,
-      posts: [],
-      reposts: [],
-      votedPosts: [],
-      submissions: [],
-      createdAt: new Date().toISOString(),
-      orders: []
-    };
+    return null;
   });
+
+  // Auth form states - FIXED with proper initialization
+  const [authMode, setAuthMode] = useState("login");
+  const [loginUsername, setLoginUsername] = useState("");
+  const [signupUsername, setSignupUsername] = useState("");
+  const [signupDisplayName, setSignupDisplayName] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Email verification states
+  const [email, setEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [showVerification, setShowVerification] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+
+  // Notifications state
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem("notifications");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return [];
+  });
+  const [unreadCount, setUnreadCount] = useState(() => {
+    const saved = localStorage.getItem("notifications");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.filter(n => !n.read).length;
+      } catch (e) {}
+    }
+    return 0;
+  });
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("notifications", JSON.stringify(notifications));
+    setUnreadCount(notifications.filter(n => !n.read).length);
+  }, [notifications]);
 
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
       localStorage.setItem("bigf_user_profile", JSON.stringify(currentUser));
+      localStorage.setItem("accountRegistered", "true");
     }
   }, [currentUser]);
 
@@ -268,49 +194,47 @@ export default function App() {
   const [showChallengeActionModal, setShowChallengeActionModal] = useState(false);
   const [targetChallengeForUpload, setTargetChallengeForUpload] = useState(challenges[0]);
   const [challengeActionType, setChallengeActionType] = useState(null);
+  
   const [showFreestyleModal, setShowFreestyleModal] = useState(false);
   const [newPostCaption, setNewPostCaption] = useState("");
   const [newPostMedia, setNewPostMedia] = useState(null);
+  
   const [mediaSubMode, setMediaSubMode] = useState("choose");
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadPreview, setUploadPreview] = useState(null);
   const [uploadCaption, setUploadCaption] = useState("");
   const [externalSocialUrl, setExternalSocialUrl] = useState("");
   const [socialCaption, setSocialCaption] = useState("");
+  const [productProofImage, setProductProofImage] = useState(null);
+  const [productProofPreview, setProductProofPreview] = useState(null);
+  
   const videoFeedRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
   const [cameraStream, setCameraStream] = useState(null);
-  const [orders, setOrders] = useState([
-    { id: "ORD-9421", customer: "Amina Otieno", item: "BIGF Chicken Flavor (Pack of 5)", date: "Aug 9, 2026", total: "KSh 250", status: "Delivered", image: INITIAL_PRODUCTS[0].image }
-  ]);
+  
+  const [orders, setOrders] = useState([]);
   const [newCommentText, setNewCommentText] = useState("");
 
   const [userProfile, setUserProfile] = useState(() => {
     const saved = localStorage.getItem("bigf_user_profile");
     if (saved) {
       try { 
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.name) {
-          return parsed;
-        }
+        return JSON.parse(saved);
       } catch (e) {}
     }
     const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
       try {
-        const parsed = JSON.parse(savedUser);
-        if (parsed && parsed.name) {
-          return parsed;
-        }
+        return JSON.parse(savedUser);
       } catch (e) {}
     }
     return {
-      name: getRandomName(),
-      handle: "@bigf_user",
-      bio: "Ready for BIGF Kenya challenges 🍜✨",
-      avatar: "https://i.pravatar.cc/150?img=" + Math.floor(1 + Math.random() * 70),
+      name: "",
+      handle: "",
+      bio: "",
+      avatar: "https://i.pravatar.cc/150?img=1",
       followers: 0,
       following: 0,
       posts: [],
@@ -396,6 +320,157 @@ export default function App() {
     }
   }, [currentUser]);
 
+  const addNotification = (message, type = "info") => {
+    const newNotification = {
+      id: Date.now(),
+      message,
+      type,
+      read: false,
+      timestamp: new Date().toISOString()
+    };
+    setNotifications(prev => [newNotification, ...prev]);
+  };
+
+  const markAsRead = (id) => {
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(n => ({ ...n, read: true }))
+    );
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("bigf_user_profile");
+      setCurrentUser(null);
+      setUserProfile({ name: "", handle: "", bio: "", avatar: "https://i.pravatar.cc/150?img=1" });
+      setActiveNavTab("home");
+      setLoginUsername("");
+      setSignupUsername("");
+      setSignupDisplayName("");
+      setEmail("");
+      setIsEmailVerified(false);
+      setVerificationCode("");
+      setShowVerification(false);
+      setDisplayName("");
+      alert("You have been logged out successfully.");
+    }
+  };
+
+  // FIXED: Login function - properly saves user data
+  const handleLogin = () => {
+    if (!loginUsername || loginUsername.length < 3) {
+      alert("Please enter your username.");
+      return;
+    }
+
+    // Get all users from localStorage
+    const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
+    const foundUser = allUsersData[loginUsername];
+    
+    if (!foundUser) {
+      alert("Username not found. Please check your username or create a new account.");
+      return;
+    }
+
+    // Set the current user
+    setCurrentUser(foundUser);
+    setUserProfile(foundUser);
+    localStorage.setItem("currentUser", JSON.stringify(foundUser));
+    localStorage.setItem("bigf_user_profile", JSON.stringify(foundUser));
+    localStorage.setItem("accountRegistered", "true");
+    setLoginUsername("");
+    setShowAuthModal(false);
+    alert("✅ Welcome back " + foundUser.name + "!");
+    addNotification("Welcome back " + foundUser.name + "! 👋", "info");
+  };
+
+  // FIXED: Signup function - properly saves user data
+  const handleSignup = () => {
+    if (!signupUsername || signupUsername.length < 3) {
+      alert("Username must be at least 3 characters long.");
+      return;
+    }
+    if (!signupDisplayName || signupDisplayName.length < 2) {
+      alert("Please enter your display name.");
+      return;
+    }
+
+    // Check if username already exists
+    const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
+    if (allUsersData[signupUsername]) {
+      alert("Username already taken. Please choose a different username.");
+      return;
+    }
+
+    // Create new user
+    const handle = "@" + signupUsername.toLowerCase().replace(/\s/g, "");
+    const newUser = {
+      id: "user-" + Date.now(),
+      name: signupDisplayName,
+      username: signupUsername,
+      handle: handle,
+      bio: "BIGF Challenge Participant",
+      avatar: "https://i.pravatar.cc/150?img=" + Math.floor(1 + Math.random() * 70),
+      followers: 0,
+      following: 0,
+      posts: [],
+      reposts: [],
+      votedPosts: [],
+      submissions: [],
+      createdAt: new Date().toISOString(),
+      orders: []
+    };
+
+    // Save to all users data
+    allUsersData[signupUsername] = newUser;
+    localStorage.setItem("allUsersData", JSON.stringify(allUsersData));
+
+    // Also save to users list for reference
+    const existingUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
+    existingUsers.push({ username: signupUsername, userId: newUser.id });
+    localStorage.setItem("allUsers", JSON.stringify(existingUsers));
+
+    // Set current user
+    setCurrentUser(newUser);
+    setUserProfile(newUser);
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    localStorage.setItem("bigf_user_profile", JSON.stringify(newUser));
+    localStorage.setItem("accountRegistered", "true");
+    setSignupUsername("");
+    setSignupDisplayName("");
+    setShowAuthModal(false);
+    alert("✅ Account created successfully! Welcome " + signupDisplayName + "!");
+    
+    addNotification("Welcome to BIGF Kenya! 🎉 Start by joining a challenge!", "info");
+  };
+
+  const handleSendVerificationCode = () => {
+    if (!email || !email.includes("@")) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setVerificationCode(code);
+    setShowVerification(true);
+    alert("Verification code sent to " + email + ": " + code);
+  };
+
+  const handleVerifyEmail = () => {
+    if (!verificationCode || verificationCode.length !== 6) {
+      alert("Please enter the 6-digit verification code.");
+      return;
+    }
+    setIsEmailVerified(true);
+    setShowVerification(false);
+    alert("✅ Email verified! You can now submit your Challenge entry.");
+  };
+
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminPasscode === "admin123" || adminPasscode === "BIGF2026") {
@@ -432,7 +507,7 @@ export default function App() {
       rules: [
         "1. Publish your BIGF challenge video on TikTok.",
         "2. Submit the TikTok video link for review.",
-        "3. Get community votes to win!"
+        "3. TikTok Likes determine the winner!"
       ]
     };
 
@@ -509,6 +584,14 @@ export default function App() {
     }
   };
 
+  const handleProductProofUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProductProofImage(file);
+      setProductProofPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleUploadToChallenge = (e) => {
     e.preventDefault();
     alert("BIGF challenge entries are submitted through TikTok. Publish your video on TikTok, then paste the TikTok link here.");
@@ -532,22 +615,36 @@ export default function App() {
       alert("Please provide a caption for your TikTok post!");
       return;
     }
+    if (!productProofImage) {
+      alert("Please upload a clear photo of the BIGF product/package you used for this Challenge.");
+      return;
+    }
+    if (!isEmailVerified) {
+      alert("Please verify your email address before submitting.");
+      return;
+    }
 
     const targetChal = targetChallengeForUpload || challenges[0];
     const newSocialSubmission = {
       id: "submission-" + Date.now(),
       challengeId: targetChal.id,
       challengeTitle: targetChal.title,
-      pioneer: currentUser?.name || "BIGF User",
-      handle: currentUser?.handle || "@user",
+      pioneer: displayName || "BIGF User",
+      handle: "@user",
       thumbnail: products[1].image,
       caption: socialCaption,
       tiktokUrl: url,
+      productProof: productProofPreview,
+      status: "PENDING_REVIEW",
+      isFeatured: false,
       votes: 0,
       votedByMe: false,
-      isFollowing: false
+      isFollowing: false,
+      createdAt: new Date().toISOString(),
+      email: email
     };
 
+    // If user is logged in, add submission to their profile
     if (currentUser) {
       const updatedUser = {
         ...currentUser,
@@ -555,168 +652,61 @@ export default function App() {
       };
       setCurrentUser(updatedUser);
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      
+      const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
+      if (allUsersData[currentUser.username]) {
+        allUsersData[currentUser.username] = updatedUser;
+        localStorage.setItem("allUsersData", JSON.stringify(allUsersData));
+      }
     }
 
     setChallengeSubmissions(prev => [newSocialSubmission, ...prev]);
     setExternalSocialUrl("");
     setSocialCaption("");
+    setProductProofImage(null);
+    setProductProofPreview(null);
     setChallengeActionType(null);
     setShowChallengeActionModal(false);
-    alert("🎉 Your TikTok entry has been submitted to the challenge!");
+    // Reset email verification for next submission
+    setEmail("");
+    setIsEmailVerified(false);
+    setVerificationCode("");
+    setShowVerification(false);
+    setDisplayName("");
+    alert("🎉 Your Challenge entry has been submitted for review!");
+    
+    addNotification("Your challenge entry has been submitted for review! 📝", "info");
   };
 
   const handleCreatePost = (e) => {
     e.preventDefault();
-    
-    const newPost = {
-      id: "post-" + Date.now(),
-      caption: newPostCaption,
-      videoUrl: newPostMedia ? URL.createObjectURL(newPostMedia) : null,
-      user: currentUser?.name || "You",
-      avatar: currentUser?.avatar || "👤",
-      likes: 0,
-      comments: [],
-      timestamp: "Just now",
-      pioneer: currentUser?.name || "You",
-      handle: currentUser?.handle || "@user",
-      thumbnail: newPostMedia ? URL.createObjectURL(newPostMedia) : "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
-      likedByMe: false,
-      repostedByMe: false,
-      isFollowing: false
-    };
-
-    setFeedVideos(prev => [newPost, ...prev]);
-    setNewPostCaption("");
-    setNewPostMedia(null);
+    alert("Community posting is not available in V1. Please submit your entry through a Challenge.");
     setShowFreestyleModal(false);
   };
 
   const handleFollowUser = (postId) => {
-    const updateFollowing = (items) => items.map(v => {
-      if (v.id === postId) {
-        const nextFollowing = !v.isFollowing;
-        if (currentUser) {
-          const updatedUser = {
-            ...currentUser,
-            following: Math.max(0, nextFollowing ? (currentUser.following || 0) + 1 : (currentUser.following || 0) - 1)
-          };
-          setCurrentUser(updatedUser);
-          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-        }
-        return { ...v, isFollowing: nextFollowing };
-      }
-      return v;
-    });
-
-    setFeedVideos(prev => updateFollowing(prev));
+    alert("Follow feature is not available in V1.");
   };
 
   const handleVotePost = (postId) => {
-    setChallengeSubmissions(prev => prev.map(v => {
-      if (v.id === postId) {
-        const nextVoted = !v.votedByMe;
-        if (currentUser) {
-          const updatedVotedPosts = nextVoted
-            ? [...(currentUser.votedPosts || []), v]
-            : (currentUser.votedPosts || []).filter(item => item.id !== postId);
-          const updatedUser = { ...currentUser, votedPosts: updatedVotedPosts };
-          setCurrentUser(updatedUser);
-          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-        }
-
-        return {
-          ...v,
-          votedByMe: nextVoted,
-          votes: nextVoted ? v.votes + 1 : Math.max(0, v.votes - 1)
-        };
-      }
-      return v;
-    }));
+    alert("Website voting is not used in V1. Winner ranking is based on TikTok Likes.");
   };
 
   const handleLikeFeedItem = (postId) => {
-    setFeedVideos(prev => prev.map(v => {
-      if (v.id === postId) {
-        const nextLiked = !v.likedByMe;
-        return {
-          ...v,
-          likedByMe: nextLiked,
-          likes: nextLiked ? v.likes + 1 : v.likes - 1
-        };
-      }
-      return v;
-    }));
+    alert("Like feature is not available in V1.");
   };
 
   const handleRepost = (postId) => {
-    setFeedVideos(prev => prev.map(v => {
-      if (v.id === postId) {
-        const nextReposted = !v.repostedByMe;
-        if (currentUser) {
-          const updatedReposts = nextReposted
-            ? [...(currentUser.reposts || []), v]
-            : (currentUser.reposts || []).filter(item => item.id !== postId);
-          const updatedUser = { ...currentUser, reposts: updatedReposts };
-          setCurrentUser(updatedUser);
-          localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-        }
-
-        return {
-          ...v,
-          repostedByMe: nextReposted,
-          reposts: nextReposted ? v.reposts + 1 : v.reposts - 1
-        };
-      }
-      return v;
-    }));
+    alert("Repost feature is not available in V1.");
   };
 
   const handleAddComment = (postId, e) => {
     e.preventDefault();
-    if (!newCommentText.trim()) return;
-
-    const newComment = {
-      id: "cm-" + Date.now(),
-      user: currentUser?.handle || "@user",
-      text: newCommentText.trim(),
-      likes: 0,
-      likedByMe: false,
-      replies: []
-    };
-
-    setFeedVideos(prev => prev.map(v => {
-      if (v.id === postId) {
-        return { ...v, comments: [...v.comments, newComment] };
-      }
-      return v;
-    }));
-    setNewCommentText("");
+    alert("Comment feature is not available in V1.");
   };
 
   const handleOrderProduct = (prod) => {
-    const newOrd = {
-      id: "ORD-" + Math.floor(1000 + Math.random() * 9000),
-      customer: currentUser?.name || "BIGF User",
-      item: prod.name + " (Pack)",
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      total: prod.price,
-      status: "Processing",
-      image: prod.image
-    };
-    setOrders(prev => [newOrd, ...prev]);
-    
-    if (currentUser) {
-      const updatedUser = {
-        ...currentUser,
-        orders: [...(currentUser.orders || []), newOrd]
-      };
-      setCurrentUser(updatedUser);
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-    }
-    
-    setActiveNavTab("profile");
-    setProfileTab("orders");
-    alert("✅ Order placed successfully! " + prod.name + " is on its way.");
+    alert("📦 BIGF products are available at your local retailers. Thank you for your interest!");
   };
 
   const handleSaveEditProfile = (e) => {
@@ -734,6 +724,13 @@ export default function App() {
     setUserProfile(updatedProfile);
     localStorage.setItem("currentUser", JSON.stringify(updatedProfile));
     localStorage.setItem("bigf_user_profile", JSON.stringify(updatedProfile));
+    
+    const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
+    if (allUsersData[currentUser?.username]) {
+      allUsersData[currentUser.username] = updatedProfile;
+      localStorage.setItem("allUsersData", JSON.stringify(allUsersData));
+    }
+    
     setShowEditProfileModal(false);
     setIsNewUser(false);
   };
@@ -749,9 +746,30 @@ export default function App() {
     }
   };
 
+  const handleApproveSubmission = (submissionId) => {
+    setChallengeSubmissions(prev => prev.map(item => 
+      item.id === submissionId ? { ...item, status: "APPROVED" } : item
+    ));
+    alert("✅ Submission approved!");
+  };
+
+  const handleRejectSubmission = (submissionId) => {
+    setChallengeSubmissions(prev => prev.map(item => 
+      item.id === submissionId ? { ...item, status: "REJECTED" } : item
+    ));
+    alert("❌ Submission rejected.");
+  };
+
+  const handleFeatureEntry = (submissionId) => {
+    setChallengeSubmissions(prev => prev.map(item => 
+      item.id === submissionId ? { ...item, isFeatured: !item.isFeatured } : item
+    ));
+    alert("⭐ Featured status toggled.");
+  };
+
   const handleDeletePost = (postId) => {
     if (window.confirm("Are you sure you want to delete this post as Admin?")) {
-      setFeedVideos(prev => prev.filter(v => v.id !== postId));
+      setFeaturedEntries(prev => prev.filter(v => v.id !== postId));
     }
   };
 
@@ -767,15 +785,16 @@ export default function App() {
     }
   };
 
-  const handleUpdateOrderStatus = (orderId, newStatus) => {
-    setOrders(prev => prev.map(ord => ord.id === orderId ? { ...ord, status: newStatus } : ord));
-  };
+  const handleUpdateOrderStatus = (orderId, newStatus) => {};
 
   const filteredChallenges = selectedCategory === "All"
     ? challenges
     : challenges.filter(c => c.category === selectedCategory);
 
-  const topLeaderboardEntries = [...challengeSubmissions].sort((a, b) => b.votes - a.votes).slice(0, 3);
+  const topLeaderboardEntries = [...challengeSubmissions]
+    .filter(s => s.status === "APPROVED")
+    .sort((a, b) => b.votes - a.votes)
+    .slice(0, 3);
 
   const WelcomeModal = () => {
     return (
@@ -815,8 +834,7 @@ export default function App() {
             lineHeight: "1.6",
             margin: "0 0 20px 0"
           }}>
-            You've been automatically signed in as <strong style={{ color: "#f97316" }}>{currentUser?.name}</strong>.<br />
-            Customize your profile below to get started.
+            Discover our food, join the Challenge, and be part of the BIGF community.
           </p>
           
           <div style={{
@@ -827,27 +845,20 @@ export default function App() {
             border: "1px solid #fed7aa",
             textAlign: "left"
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-              <img 
-                src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
-                alt="avatar" 
-                style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }} 
-              />
-              <div>
-                <div style={{ fontWeight: "1000", fontSize: "14px", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                  {currentUser?.name}
-                </div>
-                <div style={{ fontSize: "12px", color: "#a8a29e" }}>
-                  {currentUser?.handle}
-                </div>
-              </div>
+            <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+              🍜 To participate in a Challenge:
+            </div>
+            <div style={{ fontSize: "12px", color: "#a8a29e", marginTop: "8px" }}>
+              1. Verify your email<br />
+              2. Cook with BIGF<br />
+              3. Post on TikTok<br />
+              4. Submit your entry
             </div>
           </div>
           
           <button
             onClick={() => {
               setIsNewUser(false);
-              setShowEditProfileModal(true);
             }}
             style={{
               background: "linear-gradient(135deg, #f97316, #c2410c)",
@@ -861,27 +872,174 @@ export default function App() {
               width: "100%"
             }}
           >
-            ✏️ Customize My Profile
+            🚀 Explore BIGF
           </button>
-          <button
-            onClick={() => {
-              setIsNewUser(false);
-              alert("🎉 Welcome! Explore challenges, order products, and join the BIGF community!");
-            }}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#a8a29e",
-              padding: "12px",
-              fontWeight: "700",
-              fontSize: "13px",
-              cursor: "pointer",
-              marginTop: "8px",
-              width: "100%"
-            }}
-          >
-            Skip for now
-          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // Auth Modal Component
+  const AuthModal = () => {
+    return (
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.6)",
+        backdropFilter: "blur(10px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 99999,
+        padding: "20px"
+      }}>
+        <div style={{
+          background: appSettings.darkMode ? "#1e1b18" : "#ffffff",
+          borderRadius: "28px",
+          maxWidth: "440px",
+          width: "100%",
+          padding: "32px",
+          border: "2px solid #f97316",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)"
+        }}>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px"
+          }}>
+            <h2 style={{
+              fontSize: "22px",
+              fontWeight: "1000",
+              color: appSettings.darkMode ? "#fff" : "#17120f",
+              margin: 0
+            }}>
+              {authMode === "login" ? "🔐 Login" : "📝 Create Account"}
+            </h2>
+            <button
+              onClick={() => {
+                setShowAuthModal(false);
+                setLoginUsername("");
+                setSignupUsername("");
+                setSignupDisplayName("");
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: appSettings.darkMode ? "#fff" : "#17120f"
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          {authMode === "login" ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <input
+                type="text"
+                placeholder="Username"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid #fed7aa",
+                  backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
+                  color: appSettings.darkMode ? "#fff" : "#000",
+                  fontSize: "13px",
+                  boxSizing: "border-box"
+                }}
+              />
+              <button
+                onClick={handleLogin}
+                style={{
+                  background: "#f97316",
+                  color: "#fff",
+                  border: "none",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  fontWeight: "700",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                Login
+              </button>
+              <p style={{ fontSize: "13px", color: "#a8a29e", textAlign: "center", margin: "8px 0 0 0" }}>
+                Don't have an account?{" "}
+                <span
+                  onClick={() => setAuthMode("signup")}
+                  style={{ color: "#f97316", fontWeight: "700", cursor: "pointer" }}
+                >
+                  Sign up
+                </span>
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              <input
+                type="text"
+                placeholder="Choose a username"
+                value={signupUsername}
+                onChange={(e) => setSignupUsername(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid #fed7aa",
+                  backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
+                  color: appSettings.darkMode ? "#fff" : "#000",
+                  fontSize: "13px",
+                  boxSizing: "border-box"
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Display Name"
+                value={signupDisplayName}
+                onChange={(e) => setSignupDisplayName(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  border: "1px solid #fed7aa",
+                  backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
+                  color: appSettings.darkMode ? "#fff" : "#000",
+                  fontSize: "13px",
+                  boxSizing: "border-box"
+                }}
+              />
+              <button
+                onClick={handleSignup}
+                style={{
+                  background: "#f97316",
+                  color: "#fff",
+                  border: "none",
+                  padding: "12px",
+                  borderRadius: "10px",
+                  fontWeight: "700",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                Create Account
+              </button>
+              <p style={{ fontSize: "13px", color: "#a8a29e", textAlign: "center", margin: "8px 0 0 0" }}>
+                Already have an account?{" "}
+                <span
+                  onClick={() => setAuthMode("login")}
+                  style={{ color: "#f97316", fontWeight: "700", cursor: "pointer" }}
+                >
+                  Login
+                </span>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -899,7 +1057,8 @@ export default function App() {
       transition: "background-color 0.3s" 
     }}>
       
-      {isNewUser && currentUser && <WelcomeModal />}
+      {isNewUser && <WelcomeModal />}
+      {showAuthModal && <AuthModal />}
 
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
         {slots.map((slot) => (
@@ -934,10 +1093,128 @@ export default function App() {
           <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: appSettings.darkMode ? "#2a2421" : "#fff7ed", color: "#c2410c", border: "1px solid #fed7aa", padding: "8px 14px", borderRadius: "12px", fontWeight: "900", fontSize: "12px", cursor: "pointer" }}>
             🏆 Challenge Hub
           </button>
-          
-          <button onClick={() => setActiveNavTab("notifications")} style={{ backgroundColor: activeNavTab==="notifications"?"#f97316":(appSettings.darkMode ? "#2a2421" : "rgba(249,115,22,.08)"), border: "1px solid rgba(249,115,22,.3)", padding: "9px 12px", borderRadius: "12px", fontWeight: "800", cursor: "pointer", color: activeNavTab==="notifications"?"#fff":"#c2410c" }}>
-            🔔
-          </button>
+
+          {/* Notification Button */}
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <button 
+              onClick={() => setShowNotifications(!showNotifications)} 
+              style={{ 
+                backgroundColor: appSettings.darkMode ? "#2a2421" : "rgba(249,115,22,.08)", 
+                border: "1px solid rgba(249,115,22,.3)", 
+                padding: "9px 12px", 
+                borderRadius: "12px", 
+                fontWeight: "800", 
+                cursor: "pointer", 
+                color: "#c2410c",
+                position: "relative"
+              }}
+            >
+              🔔
+              {unreadCount > 0 && (
+                <span style={{
+                  position: "absolute",
+                  top: "-4px",
+                  right: "-4px",
+                  background: "#ef4444",
+                  color: "#fff",
+                  borderRadius: "50%",
+                  width: "18px",
+                  height: "18px",
+                  fontSize: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "900"
+                }}>
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {showNotifications && (
+              <div style={{
+                position: "absolute",
+                top: "45px",
+                right: "0",
+                width: "320px",
+                maxHeight: "400px",
+                overflowY: "auto",
+                background: appSettings.darkMode ? "#1e1b18" : "#ffffff",
+                borderRadius: "16px",
+                border: "1px solid rgba(249,115,22,0.3)",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+                zIndex: 100,
+                padding: "8px 0"
+              }}>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "10px 16px",
+                  borderBottom: "1px solid rgba(249,115,22,0.1)"
+                }}>
+                  <span style={{ fontWeight: "1000", fontSize: "14px", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                    Notifications
+                  </span>
+                  {notifications.length > 0 && (
+                    <button 
+                      onClick={markAllAsRead}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#f97316",
+                        fontSize: "11px",
+                        fontWeight: "700",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Mark all read
+                    </button>
+                  )}
+                </div>
+
+                {notifications.length === 0 ? (
+                  <div style={{
+                    padding: "30px 16px",
+                    textAlign: "center",
+                    color: "#a8a29e",
+                    fontSize: "13px"
+                  }}>
+                    No notifications yet
+                  </div>
+                ) : (
+                  notifications.map(notification => (
+                    <div 
+                      key={notification.id}
+                      onClick={() => markAsRead(notification.id)}
+                      style={{
+                        padding: "10px 16px",
+                        borderBottom: "1px solid rgba(249,115,22,0.05)",
+                        background: notification.read ? "transparent" : "rgba(249,115,22,0.05)",
+                        cursor: "pointer",
+                        transition: "background 0.2s"
+                      }}
+                    >
+                      <div style={{
+                        fontSize: "12px",
+                        fontWeight: notification.read ? "500" : "700",
+                        color: appSettings.darkMode ? "#f5f5f4" : "#17120f"
+                      }}>
+                        {notification.message}
+                      </div>
+                      <div style={{
+                        fontSize: "10px",
+                        color: "#a8a29e",
+                        marginTop: "4px"
+                      }}>
+                        {new Date(notification.timestamp).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
 
           <button onClick={() => setShowSettingsModal(true)} style={{ backgroundColor: appSettings.darkMode ? "#2a2421" : "rgba(249,115,22,.08)", border: "1px solid rgba(249,115,22,.3)", padding: "9px 12px", borderRadius: "12px", fontWeight: "800", cursor: "pointer", color: "#c2410c" }}>
             ⚙️
@@ -954,7 +1231,7 @@ export default function App() {
                 <div>
                   <span style={{ background: "#fee2e2", color: "#991b1b", padding: "4px 10px", borderRadius: "8px", fontSize: "10px", fontWeight: "1000", textTransform: "uppercase" }}>Restricted Admin Access</span>
                   <h2 style={{ margin: "6px 0 2px 0", fontSize: "24px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🛠️ BIGF Admin Control Center</h2>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#a8a29e", fontWeight: "700" }}>Manage orders, create new challenges, and moderate community challenge content.</p>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#a8a29e", fontWeight: "700" }}>Manage challenges, review submissions, and moderate featured content.</p>
                 </div>
                 <button onClick={handleLogoutAdmin} style={{ background: "#dc2626", color: "#fff", border: "none", padding: "10px 18px", borderRadius: "12px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
                   🚪 Logout Admin
@@ -963,16 +1240,20 @@ export default function App() {
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px", borderRadius: "20px", border: "1px solid #fed7aa" }}>
-                  <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Total Orders</span>
-                  <div style={{ fontSize: "28px", fontWeight: "1000", color: "#c2410c", margin: "6px 0 2px" }}>{orders.length}</div>
-                </div>
-                <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px", borderRadius: "20px", border: "1px solid #fed7aa" }}>
                   <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Active Challenges</span>
                   <div style={{ fontSize: "28px", fontWeight: "1000", color: "#c2410c", margin: "6px 0 2px" }}>{challenges.length}</div>
                 </div>
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px", borderRadius: "20px", border: "1px solid #fed7aa" }}>
-                  <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Store Products</span>
-                  <div style={{ fontSize: "28px", fontWeight: "1000", color: "#c2410c", margin: "6px 0 2px" }}>{products.length}</div>
+                  <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Pending Review</span>
+                  <div style={{ fontSize: "28px", fontWeight: "1000", color: "#c2410c", margin: "6px 0 2px" }}>
+                    {challengeSubmissions.filter(s => s.status === "PENDING_REVIEW").length}
+                  </div>
+                </div>
+                <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px", borderRadius: "20px", border: "1px solid #fed7aa" }}>
+                  <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>Featured Entries</span>
+                  <div style={{ fontSize: "28px", fontWeight: "1000", color: "#c2410c", margin: "6px 0 2px" }}>
+                    {challengeSubmissions.filter(s => s.isFeatured).length}
+                  </div>
                 </div>
               </div>
 
@@ -1047,67 +1328,56 @@ export default function App() {
                 </div>
 
                 <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
-                  <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🏆 Existing Challenges</h3>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {challenges.map(chal => (
-                      <div key={chal.id} style={{ background: appSettings.darkMode ? "#141210" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-                        <div>
-                          <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{chal.title}</div>
-                          <div style={{ fontSize: "11px", color: "#c2410c", fontWeight: "900" }}>{chal.prize} • {chal.daysLeft} days remaining</div>
-                        </div>
-                        <button onClick={() => handleDeleteChallenge(chal.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "1px solid #f87171", padding: "8px 12px", borderRadius: "10px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
-                          Delete
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
-                  <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>📦 Customer Orders</h3>
-                  {orders.length === 0 ? (
-                    <p style={{ color: "#a8a29e", fontSize: "13px", fontWeight: "700" }}>No customer orders placed yet.</p>
-                  ) : (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                      {orders.map(ord => (
-                        <div key={ord.id} style={{ background: appSettings.darkMode ? "#141210" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "16px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-                          <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
-                            <img src={ord.image} alt={ord.item} style={{ width: "50px", height: "50px", borderRadius: "10px", objectFit: "cover" }} />
-                            <div>
-                              <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{ord.item}</div>
-                              <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800" }}>Customer: <strong style={{ color: "#c2410c" }}>{ord.customer}</strong> • {ord.total}</div>
-                            </div>
-                          </div>
-                          <select
-                            value={ord.status}
-                            onChange={(e) => handleUpdateOrderStatus(ord.id, e.target.value)}
-                            style={{ padding: "6px 10px", borderRadius: "8px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "11px", fontWeight: "800" }}
-                          >
-                            <option value="Processing">Processing</option>
-                            <option value="Dispatched">Dispatched</option>
-                            <option value="Delivered">Delivered</option>
-                          </select>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
-                  <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🛡️ Challenge Submissions Moderation</h3>
+                  <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🛡️ Submission Moderation</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     {challengeSubmissions.map(post => (
-                      <div key={post.id} style={{ background: appSettings.darkMode ? "#141210" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-                        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                          <img src={post.thumbnail} alt="thumb" style={{ width: "50px", height: "50px", borderRadius: "10px", objectFit: "cover" }} />
+                      <div key={post.id} style={{ background: appSettings.darkMode ? "#141210" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "16px", padding: "14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "8px" }}>
                           <div>
-                            <div style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer} ({post.handle})</div>
-                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.caption}</div>
+                            <div style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                              {post.pioneer} ({post.handle})
+                            </div>
+                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800" }}>
+                              {post.challengeTitle}
+                            </div>
+                            <div style={{ fontSize: "10px", color: post.status === "APPROVED" ? "#10b981" : post.status === "REJECTED" ? "#ef4444" : "#f59e0b", fontWeight: "900" }}>
+                              Status: {post.status}
+                            </div>
+                            {post.email && (
+                              <div style={{ fontSize: "9px", color: "#a8a29e" }}>
+                                📧 {post.email}
+                              </div>
+                            )}
+                          </div>
+                          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                            {post.status === "PENDING_REVIEW" && (
+                              <>
+                                <button onClick={() => handleApproveSubmission(post.id)} style={{ background: "#10b981", color: "#fff", border: "none", padding: "4px 10px", borderRadius: "6px", fontWeight: "700", fontSize: "10px", cursor: "pointer" }}>
+                                  ✅ Approve
+                                </button>
+                                <button onClick={() => handleRejectSubmission(post.id)} style={{ background: "#ef4444", color: "#fff", border: "none", padding: "4px 10px", borderRadius: "6px", fontWeight: "700", fontSize: "10px", cursor: "pointer" }}>
+                                  ❌ Reject
+                                </button>
+                              </>
+                            )}
+                            <button onClick={() => handleFeatureEntry(post.id)} style={{ background: post.isFeatured ? "#f59e0b" : "#6366f1", color: "#fff", border: "none", padding: "4px 10px", borderRadius: "6px", fontWeight: "700", fontSize: "10px", cursor: "pointer" }}>
+                              {post.isFeatured ? "⭐ Featured" : "⭐ Feature"}
+                            </button>
+                            <button onClick={() => handleDeleteChallengeSubmission(post.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "1px solid #f87171", padding: "4px 10px", borderRadius: "6px", fontWeight: "700", fontSize: "10px", cursor: "pointer" }}>
+                              Delete
+                            </button>
                           </div>
                         </div>
-                        <button onClick={() => handleDeleteChallengeSubmission(post.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "1px solid #f87171", padding: "8px 12px", borderRadius: "10px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
-                          Remove Submission
-                        </button>
+                        {post.productProof && (
+                          <div style={{ fontSize: "10px", color: "#a8a29e" }}>
+                            📷 Product Proof uploaded
+                          </div>
+                        )}
+                        {post.tiktokUrl && (
+                          <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ fontSize: "10px", color: "#3b82f6", textDecoration: "none" }}>
+                            🎵 View TikTok
+                          </a>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1129,6 +1399,7 @@ export default function App() {
         {/* HOME VIEW */}
         {activeNavTab === "home" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+            {/* 01 — BRAND HERO */}
             <section style={{ background: "linear-gradient(135deg, #17120f 0%, #2a1510 50%, #9a3412 100%)", borderRadius: "32px", padding: "48px 32px", color: "#ffffff", boxShadow: "0 20px 50px rgba(124,45,18,0.2)", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", right: "-20px", bottom: "-30px", fontSize: "140px", opacity: 0.15, pointerEvents: "none" }}>🍜</div>
               
@@ -1156,25 +1427,56 @@ export default function App() {
               
               <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                 <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "#f97316", color: "#17120f", border: "none", padding: "14px 24px", borderRadius: "12px", fontWeight: "1000", fontSize: "13px", cursor: "pointer", boxShadow: "0 4px 15px rgba(249,115,22,0.4)" }}>
-                  🏆 Join the Challenge & Win
+                  🏆 Join the Challenge
                 </button>
                 <button onClick={() => document.getElementById("bigf-products")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)", padding: "14px 24px", borderRadius: "12px", fontWeight: "1000", fontSize: "13px", cursor: "pointer" }}>
-                  🔥 Explore Products
+                  🔥 Explore Our Food
                 </button>
               </div>
             </section>
 
+            {/* 02 — CURRENT CHALLENGE PREVIEW */}
+            <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "2px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+                <div>
+                  <span style={{ color: "#c2410c", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>CURRENT CAMPAIGN</span>
+                  <h3 style={{ color: appSettings.darkMode ? "#fff" : "#17120f", fontSize: "24px", fontWeight: "1000", margin: "2px 0 0 0" }}>
+                    🏆 {challenges.length > 0 ? challenges[0].title : "No Active Challenge"}
+                  </h3>
+                </div>
+                <span style={{ fontSize: "12px", color: "#a8a29e", fontWeight: "700" }}>
+                  {challenges.length > 0 ? "⏳ " + challenges[0].daysLeft + " days remaining" : ""}
+                </span>
+              </div>
+              {challenges.length > 0 && (
+                <>
+                  <p style={{ fontSize: "13px", color: appSettings.darkMode ? "#d6d3d1" : "#334155", lineHeight: "1.5", fontWeight: "700" }}>
+                    {challenges[0].description}
+                  </p>
+                  <div style={{ marginTop: "12px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                    <span style={{ background: "#fef3c7", color: "#92400e", padding: "4px 10px", borderRadius: "8px", fontSize: "11px", fontWeight: "1000" }}>
+                      🏆 {challenges[0].prize}
+                    </span>
+                    <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "#f97316", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "10px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
+                      Join Challenge →
+                    </button>
+                  </div>
+                </>
+              )}
+            </section>
+
+            {/* 03 — OUR FOOD PREVIEW */}
             <section id="bigf-products" style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "2px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
                 <div>
-                  <span style={{ color: "#c2410c", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>OUR TASTY VARIETIES</span>
-                  <h3 style={{ color: appSettings.darkMode ? "#fff" : "#17120f", fontSize: "24px", fontWeight: "1000", margin: "2px 0 0 0" }}>BIGF Product Line</h3>
+                  <span style={{ color: "#c2410c", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>OUR FOOD</span>
+                  <h3 style={{ color: appSettings.darkMode ? "#fff" : "#17120f", fontSize: "24px", fontWeight: "1000", margin: "2px 0 0 0" }}>BIGF Product Range</h3>
                 </div>
                 <span style={{ fontSize: "12px", color: "#a8a29e", fontWeight: "700" }}>Different Flavours, One Family</span>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "18px" }}>
                 {products.map(prod => (
-                  <div key={prod.id} style={{ background: appSettings.darkMode ? "#141210" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "20px", overflow: "hidden", padding: "18px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <div key={prod.id} style={{ background: appSettings.darkMode ? "#141210" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "20px", overflow: "hidden", padding: "18px", display: "flex", flexDirection: "column" }}>
                     <div>
                       <img src={prod.image} alt={prod.name} style={{ width: "100%", height: "180px", objectFit: "cover", borderRadius: "14px", marginBottom: "14px", backgroundColor: "#fef3c7" }} />
                       <span style={{ background: "#fef3c7", color: "#92400e", padding: "4px 10px", borderRadius: "8px", fontSize: "10px", fontWeight: "1000" }}>{prod.badge}</span>
@@ -1182,9 +1484,9 @@ export default function App() {
                       <p style={{ color: "#a8a29e", fontSize: "12px", lineHeight: "1.5", margin: "0 0 14px" }}>{prod.description}</p>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(249,115,22,0.15)", paddingTop: "12px" }}>
-                      <strong style={{ color: "#c2410c", fontSize: "14px" }}>{prod.price}</strong>
-                      <button onClick={() => handleOrderProduct(prod)} style={{ background: "#f97316", color: "#17120f", border: "none", padding: "10px 14px", borderRadius: "10px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
-                        ORDER NOW
+                      <span style={{ color: "#a8a29e", fontSize: "12px", fontWeight: "600" }}>Available at your local retailer</span>
+                      <button onClick={() => handleOrderProduct(prod)} style={{ background: "transparent", color: "#c2410c", border: "1px solid #c2410c", padding: "8px 12px", borderRadius: "8px", fontWeight: "600", fontSize: "11px", cursor: "pointer" }}>
+                        Learn More
                       </button>
                     </div>
                   </div>
@@ -1192,14 +1494,57 @@ export default function App() {
               </div>
             </section>
 
+            {/* 04 — FEATURED CREATIONS PREVIEW */}
+            {challengeSubmissions.filter(s => s.isFeatured).length > 0 && (
+              <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "1px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
+                  <div>
+                    <span style={{ color: "#c2410c", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.5px", textTransform: "uppercase" }}>FEATURED CREATIONS</span>
+                    <h3 style={{ color: appSettings.darkMode ? "#fff" : "#17120f", fontSize: "24px", fontWeight: "1000", margin: "2px 0 0 0" }}>⭐ Featured Challenge Entries</h3>
+                  </div>
+                  <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "#f97316", color: "#fff", border: "none", padding: "8px 14px", borderRadius: "10px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
+                    View All →
+                  </button>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px" }}>
+                  {challengeSubmissions.filter(s => s.isFeatured).slice(0, 3).map((entry) => (
+                    <div key={entry.id} style={{ background: appSettings.darkMode ? "#141210" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "20px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                      <div style={{ width: "100%", height: "150px", borderRadius: "14px", overflow: "hidden", backgroundColor: "#000" }}>
+                        <img src={entry.thumbnail} alt={entry.pioneer} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{entry.pioneer}</div>
+                        <div style={{ fontSize: "11px", color: "#c2410c", fontWeight: "900" }}>{entry.challengeTitle}</div>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(249,115,22,0.15)", paddingTop: "10px" }}>
+                        <span style={{ fontSize: "11px", color: "#a8a29e" }}>
+                          {entry.tiktokUrl ? "🎵 View on TikTok" : "⭐ Featured"}
+                        </span>
+                        {entry.tiktokUrl && (
+                          <a href={entry.tiktokUrl} target="_blank" rel="noreferrer" style={{ background: "#17120f", color: "#fff", padding: "6px 12px", borderRadius: "8px", fontSize: "10px", fontWeight: "700", textDecoration: "none" }}>
+                            Watch →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 05 — SHORT BIGF STORY */}
             <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "28px", padding: "36px 32px" }}>
               <div style={{ textAlign: "center", marginBottom: "28px" }}>
                 <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
-                  📖 WHY CHOOSE BIG F
+                  📖 OUR STORY
                 </span>
-                <h3 style={{ fontSize: "26px", fontWeight: "1000", margin: "10px 0 6px 0", color: appSettings.darkMode ? "#fff" : "#17120f" }}>Crafted for Taste, Built for Real Life</h3>
+                <h3 style={{ fontSize: "26px", fontWeight: "1000", margin: "10px 0 6px 0", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                  Every Big Future Starts with a Full Stomach
+                </h3>
                 <p style={{ fontSize: "13px", color: "#a8a29e", maxWidth: "640px", margin: "0 auto", fontWeight: "700", lineHeight: "1.6" }}>
-                  Everyday food made for real family life. Simple to cook, yours to make.
+                  BIGF is a family food company built on the belief that good food brings people together. 
+                  Simple to cook, yours to make — we create everyday food made for real family life.
                 </p>
               </div>
 
@@ -1230,131 +1575,24 @@ export default function App() {
               </div>
             </section>
 
-            <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#fffaf5", border: "1px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "10px" }}>
-                <div>
-                  <span style={{ color: "#c2410c", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.5px", textTransform: "uppercase" }}>COMMUNITY GAMIFICATION</span>
-                  <h3 style={{ color: appSettings.darkMode ? "#fff" : "#17120f", fontSize: "24px", fontWeight: "1000", margin: "2px 0 0 0" }}>🏆 Top Voted Challenge Entries</h3>
-                </div>
-                <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "#f97316", color: "#fff", border: "none", padding: "8px 14px", borderRadius: "10px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
-                  View All in Challenge Hub →
-                </button>
+            {/* 06 — FOOTER */}
+            <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "32px", padding: "36px 32px", textAlign: "center" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "center" }}>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>Our Food</a>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>Challenges</a>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>About BIGF</a>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>Challenge Rules</a>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>Terms</a>
+                <a href="#" style={{ color: "#c2410c", fontWeight: "700", fontSize: "13px", textDecoration: "none" }}>Privacy</a>
               </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px" }}>
-                {topLeaderboardEntries.map((entry, idx) => (
-                  <div key={entry.id} style={{ background: appSettings.darkMode ? "#141210" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "20px", padding: "16px", display: "flex", flexDirection: "column", gap: "12px", position: "relative" }}>
-                    <div style={{ position: "absolute", top: "10px", left: "10px", background: idx === 0 ? "#f59e0b" : idx === 1 ? "#94a3b8" : "#d97706", color: "#fff", width: "26px", height: "26px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "1000", fontSize: "12px", zIndex: 2 }}>
-                      #{idx + 1}
-                    </div>
-                    <div style={{ width: "100%", height: "150px", borderRadius: "14px", overflow: "hidden", backgroundColor: "#000" }}>
-                      <img src={entry.thumbnail} alt={entry.pioneer} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{entry.pioneer}</div>
-                      <div style={{ fontSize: "11px", color: "#c2410c", fontWeight: "900" }}>{entry.challengeTitle}</div>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid rgba(249,115,22,0.15)", paddingTop: "10px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "1000", color: "#f59e0b" }}>⭐ {entry.votes} Community Votes</span>
-                      <button onClick={() => { setSelectedHubChallenge(challenges.find(c => c.id === entry.challengeId) || challenges[0]); setActiveNavTab("challenge"); }} style={{ background: "#fff7ed", color: "#c2410c", border: "1px solid #fed7aa", padding: "6px 10px", borderRadius: "8px", fontWeight: "1000", fontSize: "10px", cursor: "pointer" }}>
-                        Vote
-                      </button>
-                    </div>
-                  </div>
-                ))}
+              <div style={{ marginTop: "16px", fontSize: "12px", color: "#a8a29e" }}>
+                © {new Date().getFullYear()} BIGF Kenya. All rights reserved.
               </div>
-            </section>
-
-            <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "28px", padding: "32px" }}>
-              <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
-                  🍜 FIND YOUR PERFECT NOODLE MATCH
-                </span>
-                <h3 style={{ fontSize: "24px", fontWeight: "1000", margin: "8px 0 4px 0", color: appSettings.darkMode ? "#fff" : "#17120f" }}>Interactive Flavor Quiz</h3>
-                <p style={{ fontSize: "13px", color: "#a8a29e", fontWeight: "700" }}>Answer 2 quick questions to discover which BIGF flavor matches your cravings today!</p>
+              <div style={{ marginTop: "8px", display: "flex", gap: "16px", justifyContent: "center" }}>
+                <a href="#" style={{ color: "#a8a29e", fontSize: "20px", textDecoration: "none" }}>📱</a>
+                <a href="#" style={{ color: "#a8a29e", fontSize: "20px", textDecoration: "none" }}>🐦</a>
+                <a href="#" style={{ color: "#a8a29e", fontSize: "20px", textDecoration: "none" }}>📷</a>
               </div>
-
-              {!quizResult ? (
-                <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#141210" : "#fffaf5", border: "1px solid #fed7aa", borderRadius: "20px", padding: "24px" }}>
-                  {quizStep === 1 && (
-                    <div>
-                      <h4 style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "14px" }}>Question 1: How much spice do you like in your noodles? 🌶️</h4>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                        <button onClick={() => { setQuizSpice("Mild & Comforting"); setQuizStep(2); }} style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #fed7aa", background: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontWeight: "1000", fontSize: "13px", cursor: "pointer", textAlign: "left" }}>
-                          🍲 Mild, savory, and soothing Asian broth (Chicken/Beef)
-                        </button>
-                        <button onClick={() => { setQuizSpice("Extra Spicy & Tangy"); setQuizStep(2); }} style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #fed7aa", background: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontWeight: "1000", fontSize: "13px", cursor: "pointer", textAlign: "left" }}>
-                          🔥 Bold Sichuan chili oil with sweet tangy kick (Sweet Chili)
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {quizStep === 2 && (
-                    <div>
-                      <h4 style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "14px" }}>Question 2: When do you usually enjoy your noodles? 🌙</h4>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                        <button onClick={() => {
-                          const res = quizSpice === "Mild & Comforting" ? products[0] : products[2];
-                          setQuizResult(res);
-                        }} style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #fed7aa", background: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontWeight: "1000", fontSize: "13px", cursor: "pointer", textAlign: "left" }}>
-                          ☀️ Quick midday lunch at home or work
-                        </button>
-                        <button onClick={() => {
-                          const res = quizSpice === "Mild & Comforting" ? products[1] : products[2];
-                          setQuizResult(res);
-                        }} style={{ padding: "12px 16px", borderRadius: "12px", border: "1px solid #fed7aa", background: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontWeight: "1000", fontSize: "13px", cursor: "pointer", textAlign: "left" }}>
-                          🌙 Late-night craving snack
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#141210" : "#fffaf5", border: "2px solid #f97316", borderRadius: "20px", padding: "24px", textAlign: "center" }}>
-                  <span style={{ fontSize: "11px", backgroundColor: "#fef3c7", color: "#92400e", padding: "4px 12px", borderRadius: "8px", fontWeight: "1000" }}>YOUR MATCH</span>
-                  <h4 style={{ fontSize: "20px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", margin: "10px 0 6px 0" }}>{quizResult.name}</h4>
-                  <img src={quizResult.image} alt={quizResult.name} style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "12px", margin: "10px 0" }} />
-                  <p style={{ fontSize: "12px", color: "#a8a29e", fontWeight: "700", marginBottom: "16px" }}>{quizResult.description}</p>
-                  
-                  <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
-                    <button onClick={() => { setQuizResult(null); setQuizStep(1); setQuizSpice(null); }} style={{ background: appSettings.darkMode ? "#2a2421" : "#fff", color: "#c2410c", border: "1px solid #fed7aa", padding: "10px 16px", borderRadius: "10px", fontWeight: "1000", fontSize: "12px", cursor: "pointer", width: "100%" }}>
-                      Retake Quiz
-                    </button>
-                  </div>
-                </div>
-              )}
-            </section>
-
-            <section style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "2px solid #fed7aa", borderRadius: "32px", padding: "36px 32px" }}>
-              <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <span style={{ background: "#fef3c7", color: "#92400e", padding: "6px 14px", borderRadius: "999px", fontSize: "10px", fontWeight: "1000", letterSpacing: "1.2px", textTransform: "uppercase" }}>
-                  💬 COMMUNITY VOICE & SUGGESTIONS
-                </span>
-                <h3 style={{ fontSize: "26px", fontWeight: "1000", margin: "10px 0 6px 0", color: appSettings.darkMode ? "#fff" : "#17120f" }}>Share Your Feedback with Us</h3>
-                <p style={{ fontSize: "13px", color: "#a8a29e", maxWidth: "540px", margin: "0 auto", fontWeight: "700", lineHeight: "1.5" }}>
-                  What do you think of the website, challenges, and store? Tell us what could be improved!
-                </p>
-              </div>
-
-              {feedbackSubmitted && (
-                <div style={{ background: "#ecfdf5", border: "1px solid #10b981", color: "#065f46", padding: "14px 18px", borderRadius: "14px", fontSize: "13px", fontWeight: "1000", textAlign: "center", marginBottom: "20px" }}>
-                  🎉 Thank you! Your feedback has been successfully submitted to the BIGF team.
-                </div>
-              )}
-
-              <form onSubmit={handleFeedbackSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "700px", margin: "0 auto" }}>
-                <textarea
-                  placeholder="Tell us what you like or what could be improved..."
-                  rows={4}
-                  value={feedbackMessage}
-                  onChange={(e) => setFeedbackMessage(e.target.value)}
-                  style={{ width: "100%", padding: "12px 14px", borderRadius: "12px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff7ed", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }}
-                />
-                <button type="submit" style={{ background: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)", color: "#fff", border: "none", padding: "14px", borderRadius: "14px", fontWeight: "1000", fontSize: "14px", cursor: "pointer" }}>
-                  Submit Feedback & Suggestions 🚀
-                </button>
-              </form>
             </section>
           </div>
         )}
@@ -1374,12 +1612,12 @@ export default function App() {
                       CREATE. POST. <span style={{ color: "#fdba74" }}>WIN.</span>
                     </h2>
                     <p style={{ margin: 0, maxWidth: "610px", fontSize: "13px", lineHeight: "1.65", color: "#ffedd5", fontWeight: "700" }}>
-                      Take a BIGF challenge, publish your noodle video on TikTok, submit the link here, and let the community vote.
+                      Take a BIGF challenge, publish your noodle video on TikTok, submit the link here, and let TikTok Likes determine the winner!
                     </p>
                     <div style={{ display: "flex", gap: "9px", flexWrap: "wrap", marginTop: "18px" }}>
                       <span style={{ background: "#f97316", padding: "7px 11px", borderRadius: "9px", fontSize: "10px", fontWeight: "1000" }}>🎥 VIDEO</span>
                       <span style={{ background: "rgba(255,255,255,.12)", padding: "7px 11px", borderRadius: "9px", fontSize: "10px", fontWeight: "1000" }}>🎵 TIKTOK</span>
-                      <span style={{ background: "rgba(255,255,255,.12)", padding: "7px 11px", borderRadius: "9px", fontSize: "10px", fontWeight: "1000" }}>⭐ COMMUNITY VOTES</span>
+                      <span style={{ background: "rgba(255,255,255,.12)", padding: "7px 11px", borderRadius: "9px", fontSize: "10px", fontWeight: "1000" }}>⭐ TIKTOK LIKES</span>
                     </div>
                   </div>
                 </section>
@@ -1400,7 +1638,7 @@ export default function App() {
                         <p style={{ fontSize: "13px", color: appSettings.darkMode ? "#d6d3d1" : "#334155", lineHeight: "1.5", margin: 0, fontWeight: "700" }}>{chal.description}</p>
                         
                         <button onClick={() => setSelectedHubChallenge(chal)} style={{ alignSelf: "flex-start", background: "#f97316", color: "#fff", border: "none", padding: "12px 20px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", cursor: "pointer" }}>
-                          🔥 VIEW CHALLENGE & VOTE
+                          🔥 VIEW CHALLENGE & JOIN
                         </button>
                       </div>
                     );
@@ -1418,129 +1656,174 @@ export default function App() {
                   <p style={{ fontSize: "13px", color: appSettings.darkMode ? "#d6d3d1" : "#334155", lineHeight: "1.5", margin: "0 0 16px 0", fontWeight: "700" }}>{selectedHubChallenge.description}</p>
 
                   <div style={{ background: appSettings.darkMode ? "#2a2421" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "18px", padding: "16px", marginTop: "16px" }}>
-                    <div style={{ fontSize: "12px", fontWeight: "1000", color: "#c2410c" }}>🔥 HOW TO ENTER</div>
+                    <div style={{ fontSize: "12px", fontWeight: "1000", color: "#c2410c" }}>🔥 HOW TO JOIN</div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: "10px", marginTop: "10px" }}>
-                      <div style={{ fontSize: "11px", fontWeight: "800" }}>1️⃣ Create your BIGF video</div>
-                      <div style={{ fontSize: "11px", fontWeight: "800" }}>2️⃣ Post it on TikTok</div>
-                      <div style={{ fontSize: "11px", fontWeight: "800" }}>3️⃣ Copy the TikTok link</div>
+                      <div style={{ fontSize: "11px", fontWeight: "800" }}>1️⃣ Verify your Email</div>
+                      <div style={{ fontSize: "11px", fontWeight: "800" }}>2️⃣ Cook with BIGF</div>
+                      <div style={{ fontSize: "11px", fontWeight: "800" }}>3️⃣ Post on TikTok</div>
+                      <div style={{ fontSize: "11px", fontWeight: "800" }}>4️⃣ Submit entry + Product Proof</div>
                     </div>
-                    <button onClick={() => {
+
+                    {/* Email Verification Section */}
+                    <div style={{ marginTop: "16px", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "16px", borderRadius: "12px", border: "1px solid #fed7aa" }}>
+                      <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "8px" }}>
+                        📧 Verify Your Email to Join
+                      </div>
+                      <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                        <input
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "12px", minWidth: "180px" }}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Display Name"
+                          value={displayName}
+                          onChange={(e) => setDisplayName(e.target.value)}
+                          style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "12px", minWidth: "150px" }}
+                        />
+                        <button 
+                          onClick={handleSendVerificationCode} 
+                          style={{ background: "#f97316", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "700", fontSize: "12px", cursor: "pointer" }}
+                        >
+                          Send Code
+                        </button>
+                      </div>
+                      {showVerification && (
+                        <div style={{ display: "flex", gap: "8px", marginTop: "10px", flexWrap: "wrap" }}>
+                          <input
+                            type="text"
+                            placeholder="Enter 6-digit code"
+                            value={verificationCode}
+                            onChange={(e) => setVerificationCode(e.target.value)}
+                            style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "12px" }}
+                          />
+                          <button onClick={handleVerifyEmail} style={{ background: "#10b981", color: "#fff", border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "700", fontSize: "12px", cursor: "pointer" }}>
+                            Verify Email
+                          </button>
+                        </div>
+                      )}
+                      {isEmailVerified && (
+                        <div style={{ marginTop: "10px", padding: "8px 12px", background: "#d1fae5", borderRadius: "8px", color: "#065f46", fontWeight: "700", fontSize: "12px" }}>
+                          ✅ Email verified! You can now submit your entry.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => {
+                      if (!isEmailVerified) {
+                        alert("Please verify your email first to submit an entry.");
+                        return;
+                      }
                       setTargetChallengeForUpload(selectedHubChallenge);
                       setChallengeActionType("social");
                       setExternalSocialUrl("");
                       setSocialCaption("");
+                      setProductProofImage(null);
+                      setProductProofPreview(null);
                       setShowChallengeActionModal(true);
-                    }} style={{ marginTop: "14px", background: "#f97316", color: "#fff", border: "none", padding: "12px 20px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", cursor: "pointer" }}>
-                      🎵 SUBMIT TIKTOK ENTRY
-                    </button>
-                  </div>
+                    }} 
+                    style={{ marginTop: "16px", background: isEmailVerified ? "#f97316" : "#9ca3af", color: "#fff", border: "none", padding: "14px 24px", borderRadius: "14px", fontWeight: "1000", fontSize: "14px", cursor: isEmailVerified ? "pointer" : "not-allowed", width: "100%" }}
+                    disabled={!isEmailVerified}
+                  >
+                    🎵 SUBMIT YOUR ENTRY
+                  </button>
                 </div>
 
+                {/* Featured Entries */}
                 <div>
                   <h3 style={{ fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "16px" }}>
-                    🎥 Challenge Submissions & Voting ({challengeSubmissions.filter(v => v.challengeId === selectedHubChallenge.id).length})
+                    ⭐ Featured Entries
                   </h3>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                    {challengeSubmissions.filter(v => v.challengeId === selectedHubChallenge.id).map(post => (
-                      <div key={post.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "24px", overflow: "hidden" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-                          <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer} ({post.handle})</span>
-                          {post.handle !== currentUser?.handle && (
-                            <button onClick={() => handleFollowUser(post.id)} style={{ background: post.isFollowing ? "#e5e7eb" : "#f97316", color: post.isFollowing ? "#374151" : "#fff", border: "none", padding: "5px 12px", borderRadius: "8px", fontWeight: "1000", fontSize: "11px", cursor: "pointer" }}>
-                              {post.isFollowing ? "✓ Following" : "+ Follow"}
-                            </button>
-                          )}
+                  {challengeSubmissions.filter(v => v.challengeId === selectedHubChallenge.id && v.isFeatured).length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                      {challengeSubmissions.filter(v => v.challengeId === selectedHubChallenge.id && v.isFeatured).map(post => (
+                        <div key={post.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "24px", overflow: "hidden" }}>
+                          <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+                            <span style={{ fontSize: "12px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer}</span>
+                          </div>
+                          <div style={{ position: "relative", width: "100%", height: "360px", backgroundColor: "#000" }}>
+                            <img src={post.thumbnail} alt="Featured entry" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </div>
+                          <div style={{ padding: "14px 18px" }}>
+                            <p style={{ margin: 0, fontSize: "13px", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", fontWeight: "700" }}>{post.caption}</p>
+                            {post.tiktokUrl && (
+                              <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", marginTop: "10px", background: "#17120f", color: "#fff", padding: "8px 12px", borderRadius: "10px", textDecoration: "none", fontSize: "11px", fontWeight: "1000" }}>
+                                🎵 View on TikTok →
+                              </a>
+                            )}
+                          </div>
                         </div>
-                        <div style={{ position: "relative", width: "100%", height: "360px", backgroundColor: "#000" }}>
-                          <img src={post.thumbnail} alt="Challenge entry" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        </div>
-                        <div style={{ padding: "14px 18px 8px 18px" }}>
-                          <p style={{ margin: 0, fontSize: "13px", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", fontWeight: "700" }}>{post.caption}</p>
-                          {post.tiktokUrl && (
-                            <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", marginTop: "10px", background: "#17120f", color: "#fff", padding: "8px 12px", borderRadius: "10px", textDecoration: "none", fontSize: "11px", fontWeight: "1000" }}>
-                              🎵 WATCH ON TIKTOK →
-                            </a>
-                          )}
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 18px", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
-                          <button onClick={() => handleVotePost(post.id)} style={{ background: post.votedByMe ? "#f97316" : (appSettings.darkMode ? "#2a2421" : "#fff7ed"), color: post.votedByMe ? "#fff" : "#c2410c", border: "1px solid #fed7aa", padding: "8px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "1000", fontSize: "13px" }}>
-                            {post.votedByMe ? "🗳️ Voted" : "⭐ Vote for this challenge entry"} ({post.votes})
-                          </button>
-                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: "center", padding: "30px", background: appSettings.darkMode ? "#141210" : "#fff7ed", borderRadius: "16px" }}>
+                      <div style={{ fontSize: "40px", marginBottom: "8px" }}>⭐</div>
+                      <div style={{ fontSize: "13px", color: "#a8a29e", fontWeight: "700" }}>
+                        No featured entries yet. 
+                        <br />Be the first to get featured!
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* FEED VIEW */}
-        {activeNavTab === "feed" && (
+        {/* FEATURED ENTRIES VIEW */}
+        {activeNavTab === "featured" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "560px", margin: "0 auto" }}>
             <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", padding: "20px 24px", borderRadius: "24px", border: "1px solid #fed7aa" }}>
-              <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔥 Community Social Feed</h2>
-              <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: "#a8a29e", fontWeight: "700" }}>Explore BIGF food moments, recipes, jokes and everyday community posts. This feed is just for fun — challenge entries stay in the Challenge Hub.</p>
+              <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>⭐ Featured Creations</h2>
+              <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: "#a8a29e", fontWeight: "700" }}>
+                Curated BIGF Challenge entries from our community.
+              </p>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              {feedVideos.map(post => (
-                <div key={post.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "28px", overflow: "hidden" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-                    <div>
+            {challengeSubmissions.filter(s => s.isFeatured).length > 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+                {challengeSubmissions.filter(s => s.isFeatured).map(post => (
+                  <div key={post.id} style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", border: "1px solid #fed7aa", borderRadius: "28px", overflow: "hidden" }}>
+                    <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
                       <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>{post.pioneer}</div>
-                      <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800" }}>{post.handle} • BIGF Community</span>
+                      <span style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800" }}>{post.handle}</span>
                     </div>
-                    {post.handle !== currentUser?.handle && (
-                      <button onClick={() => handleFollowUser(post.id)} style={{ background: post.isFollowing ? (appSettings.darkMode ? "#2a2421" : "#f3f4f6") : "#f97316", color: post.isFollowing ? (appSettings.darkMode ? "#d1d5db" : "#374151") : "#fff", border: "none", padding: "6px 14px", borderRadius: "10px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
-                        {post.isFollowing ? "✓ Following" : "+ Follow"}
-                      </button>
-                    )}
-                  </div>
 
-                  <div style={{ position: "relative", width: "100%", height: "400px", backgroundColor: "#000" }}>
-                    <img src={post.thumbnail} alt="Video" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  </div>
+                    <div style={{ position: "relative", width: "100%", height: "400px", backgroundColor: "#000" }}>
+                      <img src={post.thumbnail} alt="Featured" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
 
-                  <div style={{ padding: "16px 20px 8px 20px" }}>
-                    <p style={{ margin: 0, fontSize: "14px", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", fontWeight: "700" }}>{post.caption}</p>
+                    <div style={{ padding: "16px 20px" }}>
+                      <p style={{ margin: 0, fontSize: "14px", color: appSettings.darkMode ? "#f5f5f4" : "#17120f", fontWeight: "700" }}>{post.caption}</p>
+                      {post.tiktokUrl && (
+                        <a href={post.tiktokUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", marginTop: "12px", background: "#17120f", color: "#fff", padding: "10px 16px", borderRadius: "10px", textDecoration: "none", fontSize: "12px", fontWeight: "1000" }}>
+                          🎵 View on TikTok
+                        </a>
+                      )}
+                    </div>
                   </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
-                    <button onClick={() => handleLikeFeedItem(post.id)} style={{ background: post.likedByMe ? "#f97316" : (appSettings.darkMode ? "#2a2421" : "#fff7ed"), color: post.likedByMe ? "#fff" : "#c2410c", border: "1px solid #fed7aa", padding: "8px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "1000", fontSize: "13px" }}>
-                      {post.likedByMe ? "❤️ Liked" : "🤍 Like"} ({post.likes})
-                    </button>
-                    <button onClick={() => handleRepost(post.id)} style={{ background: post.repostedByMe ? "#059669" : (appSettings.darkMode ? "#2a2421" : "#fff7ed"), color: post.repostedByMe ? "#fff" : "#059669", border: "1px solid #a7f3d0", padding: "8px 14px", borderRadius: "12px", cursor: "pointer", fontWeight: "1000", fontSize: "13px" }}>
-                      {post.repostedByMe ? "🔁 Reposted" : "🔁 Repost"} ({post.reposts})
-                    </button>
-                  </div>
-
-                  <div style={{ background: appSettings.darkMode ? "#141210" : "#fffaf5", padding: "16px 20px", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
-                    <h4 style={{ margin: "0 0 12px 0", fontSize: "13px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>
-                      💬 Comments ({post.comments.length})
-                    </h4>
-                    <form onSubmit={(e) => handleAddComment(post.id, e)} style={{ display: "flex", gap: "8px" }}>
-                      <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        value={newCommentText}
-                        onChange={(e) => setNewCommentText(e.target.value)}
-                        style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "12px", fontWeight: "700" }}
-                      />
-                      <button type="submit" style={{ background: "#f97316", color: "#fff", border: "none", padding: "10px 16px", borderRadius: "12px", fontWeight: "1000", fontSize: "12px", cursor: "pointer" }}>
-                        Post
-                      </button>
-                    </form>
-                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "60px 20px", background: appSettings.darkMode ? "#141210" : "#fff7ed", borderRadius: "24px" }}>
+                <div style={{ fontSize: "48px", marginBottom: "12px" }}>⭐</div>
+                <div style={{ fontSize: "16px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                  No Featured Entries Yet
                 </div>
-              ))}
-            </div>
+                <div style={{ fontSize: "13px", color: "#a8a29e", marginTop: "8px" }}>
+                  Check back soon for curated BIGF creations!
+                </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* PROFILE VIEW */}
+        {/* PROFILE VIEW - My BIGF */}
         {activeNavTab === "profile" && (
           <div style={{ 
             background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
@@ -1563,832 +1846,671 @@ export default function App() {
                 fontWeight: "1000", 
                 color: appSettings.darkMode ? "#fff" : "#17120f" 
               }}>
-                👤 My Account
+                👤 My BIGF
               </span>
-              <button 
-                onClick={() => setShowEditProfileModal(true)} 
-                style={{ 
-                  background: "#f97316", 
-                  color: "#fff", 
-                  border: "none", 
-                  padding: "8px 16px", 
-                  borderRadius: "10px", 
-                  fontWeight: "1000", 
-                  fontSize: "12px", 
-                  cursor: "pointer" 
-                }}
-              >
-                ✏️ Edit Profile
-              </button>
-            </div>
-
-            <div style={{ 
-              padding: "24px", 
-              display: "flex", 
-              flexDirection: "column", 
-              alignItems: "center", 
-              textAlign: "center" 
-            }}>
-              <div style={{ position: "relative", marginBottom: "16px" }}>
-                <img 
-                  src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
-                  alt={currentUser?.name || "User"} 
+              {currentUser && (
+                <button 
+                  onClick={handleLogout} 
                   style={{ 
-                    width: "120px", 
-                    height: "120px", 
-                    borderRadius: "50%", 
-                    objectFit: "cover", 
-                    border: "4px solid #f97316",
-                    boxShadow: "0 4px 20px rgba(249,115,22,0.3)"
-                  }} 
-                />
-                <button
-                  onClick={() => document.getElementById('avatarUploadDirect').click()}
-                  style={{
-                    position: "absolute",
-                    bottom: "4px",
-                    right: "4px",
-                    background: "#f97316",
-                    color: "#fff",
-                    border: "3px solid #fff",
-                    borderRadius: "50%",
-                    width: "36px",
-                    height: "36px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.2)"
+                    background: "#ef4444", 
+                    color: "#fff", 
+                    border: "none", 
+                    padding: "6px 14px", 
+                    borderRadius: "8px", 
+                    fontWeight: "700", 
+                    fontSize: "11px", 
+                    cursor: "pointer" 
                   }}
-                  title="Change profile picture"
                 >
-                  📷
+                  Logout
                 </button>
-                <input
-                  id="avatarUploadDirect"
-                  type="file"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        const updatedUser = {
-                          ...currentUser,
-                          avatar: reader.result
-                        };
-                        setCurrentUser(updatedUser);
-                        setUserProfile(updatedUser);
-                        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-                        localStorage.setItem("bigf_user_profile", JSON.stringify(updatedUser));
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                />
-              </div>
-
-              <h2 style={{ 
-                margin: "0 0 4px 0", 
-                fontSize: "22px", 
-                fontWeight: "1000", 
-                color: appSettings.darkMode ? "#fff" : "#17120f" 
-              }}>
-                {currentUser?.name || "New User"}
-              </h2>
-
-              <p style={{ 
-                fontSize: "14px", 
-                color: "#a8a29e", 
-                margin: "0 0 16px 0", 
-                fontWeight: "700" 
-              }}>
-                {currentUser?.handle || "@user"}
-              </p>
-
-              <div style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                gap: "32px", 
-                marginBottom: "16px", 
-                background: appSettings.darkMode ? "#141210" : "#fff7ed", 
-                padding: "12px 32px", 
-                borderRadius: "16px", 
-                border: "1px solid #fed7aa" 
-              }}>
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "20px", fontWeight: "1000", color: "#c2410c" }}>
-                    {currentUser?.followers || 0}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>
-                    Followers
-                  </div>
-                </div>
-                <div style={{ width: "1px", height: "35px", backgroundColor: "#fed7aa" }} />
-                <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: "20px", fontWeight: "1000", color: "#c2410c" }}>
-                    {currentUser?.following || 0}
-                  </div>
-                  <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "900", textTransform: "uppercase" }}>
-                    Following
-                  </div>
-                </div>
-              </div>
-
-              <p style={{ 
-                fontSize: "13px", 
-                color: appSettings.darkMode ? "#d6d3d1" : "#44403c", 
-                margin: "0 0 16px 0", 
-                fontWeight: "600", 
-                maxWidth: "500px", 
-                lineHeight: "1.6" 
-              }}>
-                {currentUser?.bio || "No bio yet. Click Edit Profile to add one!"}
-              </p>
-
-              <div style={{ 
-                display: "grid", 
-                gridTemplateColumns: "repeat(3, 1fr)", 
-                gap: "12px", 
-                width: "100%", 
-                maxWidth: "500px",
-                marginTop: "8px"
-              }}>
-                <div style={{ 
-                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
-                  padding: "12px", 
-                  borderRadius: "12px", 
-                  border: "1px solid #fed7aa",
-                  textAlign: "center"
-                }}>
-                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
-                    {currentUser?.submissions?.length || 0}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
-                    Submissions
-                  </div>
-                </div>
-                <div style={{ 
-                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
-                  padding: "12px", 
-                  borderRadius: "12px", 
-                  border: "1px solid #fed7aa",
-                  textAlign: "center"
-                }}>
-                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
-                    {currentUser?.reposts?.length || 0}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
-                    Reposts
-                  </div>
-                </div>
-                <div style={{ 
-                  background: appSettings.darkMode ? "#141210" : "#fff7ed", 
-                  padding: "12px", 
-                  borderRadius: "12px", 
-                  border: "1px solid #fed7aa",
-                  textAlign: "center"
-                }}>
-                  <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
-                    {currentUser?.orders?.length || 0}
-                  </div>
-                  <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
-                    Orders
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ 
-              display: "flex", 
-              borderTop: "1px solid rgba(249,115,22,0.15)", 
-              borderBottom: "1px solid rgba(249,115,22,0.15)" 
-            }}>
-              <button 
-                onClick={() => setProfileTab("overview")} 
-                style={{ 
-                  flex: 1, 
-                  padding: "14px 8px", 
-                  background: "none", 
-                  border: "none", 
-                  borderBottom: profileTab === "overview" ? "3px solid #f97316" : "3px solid transparent", 
-                  fontWeight: "1000", 
-                  fontSize: "12px", 
-                  color: profileTab === "overview" ? "#f97316" : "#a8a29e", 
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-              >
-                📊 Overview
-              </button>
-              <button 
-                onClick={() => setProfileTab("submissions")} 
-                style={{ 
-                  flex: 1, 
-                  padding: "14px 8px", 
-                  background: "none", 
-                  border: "none", 
-                  borderBottom: profileTab === "submissions" ? "3px solid #f97316" : "3px solid transparent", 
-                  fontWeight: "1000", 
-                  fontSize: "12px", 
-                  color: profileTab === "submissions" ? "#f97316" : "#a8a29e", 
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-              >
-                📹 Submissions
-              </button>
-              <button 
-                onClick={() => setProfileTab("reposts")} 
-                style={{ 
-                  flex: 1, 
-                  padding: "14px 8px", 
-                  background: "none", 
-                  border: "none", 
-                  borderBottom: profileTab === "reposts" ? "3px solid #f97316" : "3px solid transparent", 
-                  fontWeight: "1000", 
-                  fontSize: "12px", 
-                  color: profileTab === "reposts" ? "#f97316" : "#a8a29e", 
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-              >
-                🔁 Reposts
-              </button>
-              <button 
-                onClick={() => setProfileTab("orders")} 
-                style={{ 
-                  flex: 1, 
-                  padding: "14px 8px", 
-                  background: "none", 
-                  border: "none", 
-                  borderBottom: profileTab === "orders" ? "3px solid #f97316" : "3px solid transparent", 
-                  fontWeight: "1000", 
-                  fontSize: "12px", 
-                  color: profileTab === "orders" ? "#f97316" : "#a8a29e", 
-                  cursor: "pointer",
-                  transition: "all 0.2s"
-                }}
-              >
-                🛒 Orders
-              </button>
-            </div>
-
-            <div style={{ 
-              padding: "20px", 
-              minHeight: "250px", 
-              background: appSettings.darkMode ? "#141210" : "#fafaf9" 
-            }}>
-              {profileTab === "overview" && (
-                <div>
-                  <h4 style={{ 
-                    margin: "0 0 16px 0", 
-                    fontSize: "15px", 
+              )}
+              {!currentUser && (
+                <button 
+                  onClick={() => {
+                    setAuthMode("login");
+                    setShowAuthModal(true);
+                  }} 
+                  style={{ 
+                    background: "#f97316", 
+                    color: "#fff", 
+                    border: "none", 
+                    padding: "8px 16px", 
+                    borderRadius: "10px", 
                     fontWeight: "1000", 
-                    color: appSettings.darkMode ? "#fff" : "#17120f" 
-                  }}>
-                    📊 Account Overview
-                  </h4>
-                  
+                    fontSize: "12px", 
+                    cursor: "pointer" 
+                  }}
+                >
+                  🔐 Sign Up / Login
+                </button>
+              )}
+            </div>
+
+            {currentUser ? (
+              // LOGGED IN - Show full profile
+              <>
+                <div style={{ padding: "24px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+                  <div style={{ position: "relative", marginBottom: "16px" }}>
+                    <img 
+                      src={currentUser?.avatar || "https://i.pravatar.cc/150?img=1"} 
+                      alt={currentUser?.name || "User"} 
+                      style={{ 
+                        width: "120px", 
+                        height: "120px", 
+                        borderRadius: "50%", 
+                        objectFit: "cover", 
+                        border: "4px solid #f97316",
+                        boxShadow: "0 4px 20px rgba(249,115,22,0.3)"
+                      }} 
+                    />
+                    <button
+                      onClick={() => document.getElementById("avatarUploadDirect").click()}
+                      style={{
+                        position: "absolute",
+                        bottom: "4px",
+                        right: "4px",
+                        background: "#f97316",
+                        color: "#fff",
+                        border: "3px solid #fff",
+                        borderRadius: "50%",
+                        width: "36px",
+                        height: "36px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.2)"
+                      }}
+                      title="Change profile picture"
+                    >
+                      📷
+                    </button>
+                    <input
+                      id="avatarUploadDirect"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            const updatedUser = {
+                              ...currentUser,
+                              avatar: reader.result
+                            };
+                            setCurrentUser(updatedUser);
+                            setUserProfile(updatedUser);
+                            localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+                            localStorage.setItem("bigf_user_profile", JSON.stringify(updatedUser));
+                            
+                            const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
+                            if (allUsersData[currentUser?.username]) {
+                              allUsersData[currentUser.username] = updatedUser;
+                              localStorage.setItem("allUsersData", JSON.stringify(allUsersData));
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <h2 style={{ margin: "0 0 4px 0", fontSize: "22px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                    {currentUser?.name || "Participant"}
+                  </h2>
+                  <p style={{ fontSize: "14px", color: "#a8a29e", margin: "0 0 8px 0", fontWeight: "700" }}>
+                    {currentUser?.handle || ""}
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#a8a29e", marginBottom: "12px" }}>
+                    👤 @{currentUser?.username || ""}
+                  </p>
+                  <p style={{ fontSize: "13px", color: appSettings.darkMode ? "#d6d3d1" : "#44403c", margin: "0 0 16px 0", fontWeight: "600", maxWidth: "500px", lineHeight: "1.6" }}>
+                    {currentUser?.bio || "BIGF Challenge Participant"}
+                  </p>
+
                   <div style={{ 
                     display: "grid", 
-                    gridTemplateColumns: "1fr 1fr", 
-                    gap: "12px",
-                    marginBottom: "16px"
+                    gridTemplateColumns: "repeat(2, 1fr)", 
+                    gap: "12px", 
+                    width: "100%", 
+                    maxWidth: "400px",
+                    marginTop: "8px"
                   }}>
                     <div style={{ 
-                      background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                      padding: "16px", 
+                      background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                      padding: "12px", 
                       borderRadius: "12px", 
-                      border: "1px solid #fed7aa" 
+                      border: "1px solid #fed7aa",
+                      textAlign: "center"
                     }}>
-                      <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Created</div>
-                      <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
-                        {currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : "Today"}
+                      <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
+                        {currentUser?.submissions?.length || 0}
+                      </div>
+                      <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
+                        Submissions
                       </div>
                     </div>
                     <div style={{ 
-                      background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                      padding: "16px", 
+                      background: appSettings.darkMode ? "#141210" : "#fff7ed", 
+                      padding: "12px", 
                       borderRadius: "12px", 
-                      border: "1px solid #fed7aa" 
+                      border: "1px solid #fed7aa",
+                      textAlign: "center"
                     }}>
-                      <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>User ID</div>
-                      <div style={{ fontSize: "12px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px", wordBreak: "break-all" }}>
-                        {currentUser?.id || "N/A"}
+                      <div style={{ fontSize: "18px", fontWeight: "1000", color: "#c2410c" }}>
+                        {currentUser?.submissions?.filter(s => s.status === "APPROVED").length || 0}
                       </div>
-                    </div>
-                  </div>
-
-                  <div style={{ 
-                    background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                    padding: "16px", 
-                    borderRadius: "12px", 
-                    border: "1px solid #fed7aa" 
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Status</div>
-                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#10b981", marginTop: "4px" }}>
-                          ✅ Active
-                        </div>
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Total Activity</div>
-                        <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
-                          {(currentUser?.submissions?.length || 0) + (currentUser?.reposts?.length || 0) + (currentUser?.orders?.length || 0)} actions
-                        </div>
+                      <div style={{ fontSize: "10px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>
+                        Approved
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {profileTab === "submissions" && (
-                <div>
-                  {currentUser?.submissions?.length > 0 ? (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "12px" }}>
-                      {currentUser.submissions.map((submission, index) => (
-                        <div key={submission.id || index} style={{ 
-                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                          border: "1px solid #fed7aa", 
-                          borderRadius: "14px", 
-                          overflow: "hidden" 
-                        }}>
-                          {submission.thumbnail && (
-                            <img src={submission.thumbnail} alt="Submission" style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                          )}
-                          <div style={{ padding: "10px" }}>
-                            <div style={{ fontSize: "11px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                              {submission.challengeTitle || "BIGF Submission"}
-                            </div>
-                            <div style={{ fontSize: "10px", color: "#a8a29e", marginTop: "4px" }}>
-                              ⭐ {submission.votes || 0} votes
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>📹</div>
-                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
-                        No submissions yet
-                      </div>
-                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
-                        Join a BIGF challenge and post your first submission!
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {profileTab === "reposts" && (
-                <div>
-                  {currentUser?.reposts?.length > 0 ? (
-                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                      {currentUser.reposts.map((repost, index) => (
-                        <div key={repost.id || index} style={{ 
-                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                          border: "1px solid #fed7aa", 
-                          borderRadius: "14px", 
-                          padding: "14px" 
-                        }}>
-                          <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                            {repost.caption || "BIGF Repost"}
-                          </div>
-                          <div style={{ fontSize: "11px", color: "#a8a29e", marginTop: "4px" }}>
-                            🔁 Reposted from {repost.pioneer || "a BIGF member"}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>🔁</div>
-                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
-                        No reposts yet
-                      </div>
-                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
-                        Reposted BIGF community content will appear here.
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {profileTab === "orders" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {currentUser?.orders?.length > 0 ? (
-                    currentUser.orders.map((ord) => (
-                      <div key={ord.id} style={{ 
-                        background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
-                        border: "1px solid #fed7aa", 
-                        borderRadius: "16px", 
-                        padding: "16px", 
-                        display: "flex", 
-                        justifyContent: "space-between", 
-                        alignItems: "center", 
-                        gap: "12px" 
-                      }}>
-                        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                          <img src={ord.image} alt={ord.item} style={{ width: "50px", height: "50px", borderRadius: "10px", objectFit: "cover" }} />
-                          <div>
-                            <div style={{ fontSize: "13px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                              {ord.item}
-                            </div>
-                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700" }}>
-                              {ord.date} • <strong style={{ color: "#c2410c" }}>{ord.total}</strong>
-                            </div>
-                          </div>
-                        </div>
-                        <span style={{ 
-                          fontSize: "10px", 
-                          backgroundColor: ord.status === "Delivered" ? "#d1fae5" : ord.status === "Dispatched" ? "#fef3c7" : "#fee2e2",
-                          color: ord.status === "Delivered" ? "#065f46" : ord.status === "Dispatched" ? "#92400e" : "#991b1b",
-                          padding: "5px 10px", 
-                          borderRadius: "8px", 
-                          fontWeight: "1000", 
-                          whiteSpace: "nowrap" 
-                        }}>
-                          {ord.status}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <div style={{ textAlign: "center", padding: "40px 20px" }}>
-                      <div style={{ fontSize: "40px", marginBottom: "10px" }}>🛒</div>
-                      <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
-                        No orders yet
-                      </div>
-                      <div style={{ fontSize: "12px", color: "#a8a29e" }}>
-                        Your BIGF purchases will appear here.
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* NOTIFICATIONS VIEW - Admin hint removed */}
-        {activeNavTab === "notifications" && (
-          <div style={{ maxWidth: "500px", margin: "0 auto", background: appSettings.darkMode ? "#1e1b18" : "#ffffff", borderRadius: "28px", padding: "28px", border: "1px solid rgba(249,115,22,0.25)" }}>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>🔔 Notifications</h3>
-            <div style={{ backgroundColor: appSettings.darkMode ? "#141210" : "#fff7ed", padding: "14px", borderRadius: "14px", border: "1px solid #fed7aa" }}>
-              <div style={{ fontSize: "13px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                🎉 Welcome to BIGF Kenya! Stay tuned for updates, new challenges, and community announcements.
-              </div>
-              <div style={{ fontSize: "11px", fontWeight: "700", color: "#a8a29e", marginTop: "8px" }}>
-                Check back regularly for the latest news and events!
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* ADMIN LOGIN MODAL - Hidden, only accessible via Ctrl+Shift+A */}
-      {showAdminLoginModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "420px", width: "100%", padding: "28px", border: "2px solid #dc2626" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontSize: "11px", fontWeight: "1000", color: "#dc2626", textTransform: "uppercase" }}>Restricted Access</span>
-              <button onClick={() => setShowAdminLoginModal(false)} style={{ background: "none", border: "none", fontSize: "16px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#000" }}>✕</button>
-            </div>
-            
-            <h3 style={{ fontSize: "20px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", margin: "0 0 6px 0" }}>Admin Dashboard Login</h3>
-            <p style={{ fontSize: "13px", color: "#a8a29e", lineHeight: "1.5", margin: "0 0 16px 0" }}>
-              Enter administrator passcode.
-            </p>
-
-            <form onSubmit={handleAdminLogin} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <input
-                type="password"
-                placeholder="Enter passcode..."
-                value={adminPasscode}
-                onChange={(e) => setAdminPasscode(e.target.value)}
-                style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
-              />
-              <button type="submit" style={{ background: "#dc2626", color: "#ffffff", border: "none", padding: "14px", borderRadius: "12px", fontWeight: "1000", fontSize: "14px", cursor: "pointer" }}>
-                Login to Admin Dashboard →
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* EDIT PROFILE MODAL */}
-      {showEditProfileModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <span style={{ fontSize: "14px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>✏️ Edit Profile</span>
-              <button onClick={() => setShowEditProfileModal(false)} style={{ background: "none", border: "none", fontSize: "16px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#000" }}>✕</button>
-            </div>
-
-            <form onSubmit={handleSaveEditProfile} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "8px" }}>
-                <img 
-                  src={editAvatar || "https://i.pravatar.cc/150?img=1"} 
-                  alt="Profile" 
-                  style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} 
-                />
-                <div>
-                  <label style={{ fontSize: "11px", fontWeight: "1000", color: "#a8a29e", display: "block", marginBottom: "4px" }}>
-                    Choose from Gallery
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById('avatarUploadModal').click()}
-                    style={{
-                      background: "#f97316",
-                      color: "#fff",
-                      border: "none",
-                      padding: "6px 14px",
-                      borderRadius: "8px",
-                      fontWeight: "700",
-                      fontSize: "12px",
-                      cursor: "pointer"
+                <div style={{ 
+                  display: "flex", 
+                  borderTop: "1px solid rgba(249,115,22,0.15)", 
+                  borderBottom: "1px solid rgba(249,115,22,0.15)" 
+                }}>
+                  <button 
+                    onClick={() => setProfileTab("overview")} 
+                    style={{ 
+                      flex: 1, 
+                      padding: "14px 8px", 
+                      background: "none", 
+                      border: "none", 
+                      borderBottom: profileTab === "overview" ? "3px solid #f97316" : "3px solid transparent", 
+                      fontWeight: "1000", 
+                      fontSize: "12px", 
+                      color: profileTab === "overview" ? "#f97316" : "#a8a29e", 
+                      cursor: "pointer",
+                      transition: "all 0.2s"
                     }}
                   >
-                    📷 Select Image
+                    📊 Overview
                   </button>
-                  <input
-                    id="avatarUploadModal"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setEditAvatar(reader.result);
-                        };
-                        reader.readAsDataURL(file);
-                      }
+                  <button 
+                    onClick={() => setProfileTab("submissions")} 
+                    style={{ 
+                      flex: 1, 
+                      padding: "14px 8px", 
+                      background: "none", 
+                      border: "none", 
+                      borderBottom: profileTab === "submissions" ? "3px solid #f97316" : "3px solid transparent", 
+                      fontWeight: "1000", 
+                      fontSize: "12px", 
+                      color: profileTab === "submissions" ? "#f97316" : "#a8a29e", 
+                      cursor: "pointer",
+                      transition: "all 0.2s"
                     }}
-                  />
+                  >
+                    📹 Submissions
+                  </button>
                 </div>
-              </div>
 
-              <input
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                placeholder="Display Name"
-                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
-              />
-              <input
-                type="text"
-                value={editHandle}
-                onChange={(e) => setEditHandle(e.target.value)}
-                placeholder="Handle (e.g., @username)"
-                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
-              />
-              <textarea
-                value={editBio}
-                onChange={(e) => setEditBio(e.target.value)}
-                placeholder="Bio"
-                rows={3}
-                style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }}
-              />
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ flex: 1, background: "transparent", border: "1px solid #fed7aa", padding: "12px", borderRadius: "10px", fontWeight: "700", cursor: "pointer", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                  Cancel
-                </button>
-                <button type="submit" style={{ flex: 2, background: "#f97316", color: "#fff", border: "none", padding: "12px", borderRadius: "10px", fontWeight: "1000", cursor: "pointer" }}>
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                <div style={{ padding: "20px", minHeight: "250px", background: appSettings.darkMode ? "#141210" : "#fafaf9" }}>
+                  {profileTab === "overview" && (
+                    <div>
+                      <h4 style={{ margin: "0 0 16px 0", fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                        📊 Account Overview
+                      </h4>
+                      
+                      <div style={{ 
+                        display: "grid", 
+                        gridTemplateColumns: "1fr 1fr", 
+                        gap: "12px",
+                        marginBottom: "16px"
+                      }}>
+                        <div style={{ 
+                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                          padding: "16px", 
+                          borderRadius: "12px", 
+                          border: "1px solid #fed7aa" 
+                        }}>
+                          <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Created</div>
+                          <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
+                            {currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : "Today"}
+                          </div>
+                        </div>
+                        <div style={{ 
+                          background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                          padding: "16px", 
+                          borderRadius: "12px", 
+                          border: "1px solid #fed7aa" 
+                        }}>
+                          <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Username</div>
+                          <div style={{ fontSize: "12px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px", wordBreak: "break-all" }}>
+                            @{currentUser?.username || "Not set"}
+                          </div>
+                        </div>
+                      </div>
 
-      {/* CHALLENGE ACTION MODAL */}
-      {showChallengeActionModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "480px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>🔥 Challenge Entry</span>
-                <h3 style={{ margin: "5px 0 0", fontSize: "20px", fontWeight: "1000" }}>Submit your TikTok</h3>
-              </div>
-              <button onClick={() => setShowChallengeActionModal(false)} style={{ background: "none", border: "none", fontSize: "16px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#000" }}>✕</button>
-            </div>
-            <div style={{ background: appSettings.darkMode ? "#2a2421" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "13px", marginBottom: "14px" }}>
-              <div style={{ fontSize: "12px", fontWeight: "1000", color: "#c2410c" }}>🎵 TikTok submissions only</div>
-              <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700", marginTop: "4px" }}>Publish your BIGF challenge video on TikTok first, then paste the video URL below.</div>
-            </div>
-            <form onSubmit={handleSocialUrlSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <input type="url" placeholder="https://www.tiktok.com/@yourhandle/video/..." value={externalSocialUrl} onChange={(e) => setExternalSocialUrl(e.target.value)} style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }} />
-              <textarea placeholder="Tell us what you created..." value={socialCaption} onChange={(e) => setSocialCaption(e.target.value)} rows={3} style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }} />
-              <button type="submit" style={{ background: "#f97316", color: "#fff", border: "none", padding: "13px", borderRadius: "12px", fontWeight: "1000", cursor: "pointer" }}>
-                Submit TikTok Entry →
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+                      <div style={{ 
+                        background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                        padding: "16px", 
+                        borderRadius: "12px", 
+                        border: "1px solid #fed7aa" 
+                      }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Account Status</div>
+                            <div style={{ fontSize: "13px", fontWeight: "700", color: "#10b981", marginTop: "4px" }}>
+                              ✅ Active
+                            </div>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "800", textTransform: "uppercase" }}>Total Activity</div>
+                            <div style={{ fontSize: "13px", fontWeight: "700", color: appSettings.darkMode ? "#fff" : "#17120f", marginTop: "4px" }}>
+                              {currentUser?.submissions?.length || 0} submissions
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
-      {/* FREESTYLE POST MODAL */}
-      {showFreestyleModal && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px" }}>
-          <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#fff", padding: "24px", borderRadius: "24px", width: "100%", maxWidth: "480px", border: "1px solid #fed7aa", boxShadow: "0 10px 30px rgba(0,0,0,0.2)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>✨ Create Freestyle Post</h3>
-              <button onClick={() => setShowFreestyleModal(false)} style={{ background: "none", border: "none", fontSize: "18px", cursor: "pointer", color: "#a8a29e", fontWeight: "900" }}>✕</button>
-            </div>
-
-            <form onSubmit={handleCreatePost} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              <div>
-                <label style={{ fontSize: "11px", fontWeight: "1000", display: "block", marginBottom: "6px" }}>Caption / Thoughts</label>
-                <textarea
-                  rows="3"
-                  placeholder="What's cooking with your BIGF noodles today? 🍜"
-                  value={newPostCaption}
-                  onChange={(e) => setNewPostCaption(e.target.value)}
-                  style={{ width: "100%", padding: "12px", borderRadius: "12px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: "11px", fontWeight: "1000", display: "block", marginBottom: "6px" }}>Upload Media (Photo/Video)</label>
-                <input
-                  type="file"
-                  accept="image/*,video/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setNewPostMedia(e.target.files[0]);
-                    }
+                  {profileTab === "submissions" && (
+                    <div>
+                      {currentUser?.submissions?.length > 0 ? (
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "12px" }}>
+                          {currentUser.submissions.map((submission, index) => (
+                            <div key={submission.id || index} style={{ 
+                              background: appSettings.darkMode ? "#1e1b18" : "#ffffff", 
+                              border: "1px solid #fed7aa", 
+                              borderRadius: "14px", 
+                              overflow: "hidden" 
+                            }}>
+                              {submission.thumbnail && (
+                                <img src={submission.thumbnail} alt="Submission" style={{ width: "100%", height: "140px", objectFit: "cover" }} />
+                              )}
+                              <div style={{ padding: "10px" }}>
+                                <div style={{ fontSize: "11px", fontWeight: "900", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                                  {submission.challengeTitle || "BIGF Submission"}
+                                </div>
+                                <div style={{ fontSize: "10px", color: submission.status === "APPROVED" ? "#10b981" : submission.status === "REJECTED" ? "#ef4444" : "#f59e0b", marginTop: "4px", fontWeight: "800" }}>
+                                  Status: {submission.status || "PENDING_REVIEW"}
+                                </div>
+                                {submission.isFeatured && (
+                                  <div style={{ fontSize: "10px", color: "#f59e0b", fontWeight: "800" }}>
+                                    ⭐ Featured
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+                          <div style={{ fontSize: "40px", marginBottom: "10px" }}>📹</div>
+                          <div style={{ fontSize: "15px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f", marginBottom: "5px" }}>
+                            No submissions yet
+                          </div>
+                          <div style={{ fontSize: "12px", color: "#a8a29e" }}>
+                            Join a BIGF challenge and submit your entry!
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              // LOGGED OUT - Show signup/login message
+              <div style={{ padding: "60px 20px", textAlign: "center" }}>
+                <div style={{ fontSize: "48px", marginBottom: "12px" }}>👋</div>
+                <h3 style={{ fontSize: "18px", fontWeight: "1000", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                  Welcome to My BIGF
+                </h3>
+                <p style={{ fontSize: "14px", color: "#a8a29e", marginBottom: "20px" }}>
+                  Create an account to track your submissions and rewards.
+                </p>
+                <button 
+                  onClick={() => {
+                    setAuthMode("login");
+                    setShowAuthModal(true);
+                  }} 
+                  style={{ 
+                    background: "#f97316", 
+                    color: "#fff", 
+                    border: "none", 
+                    padding: "14px 28px", 
+                    borderRadius: "12px", 
+                    fontWeight: "1000", 
+                    fontSize: "14px", 
+                    cursor: "pointer" 
                   }}
-                  style={{ width: "100%", fontSize: "12px", padding: "8px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000" }}
-                />
-              </div>
-
-              <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-                <button type="button" onClick={() => setShowFreestyleModal(false)} style={{ flex: 1, background: "transparent", border: "1px solid #fed7aa", padding: "12px", borderRadius: "12px", fontWeight: "900", cursor: "pointer", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
-                  Cancel
+                >
+                  🔐 Sign Up / Login
                 </button>
-                <button type="submit" style={{ flex: 1, background: "linear-gradient(135deg, #f97316, #c2410c)", color: "#fff", border: "none", padding: "12px", borderRadius: "12px", fontWeight: "1000", cursor: "pointer" }}>
-                  Post to Feed 🚀
-                </button>
+                <p style={{ fontSize: "12px", color: "#a8a29e", marginTop: "12px" }}>
+                  You can submit a challenge entry without an account - just verify your email.
+                </p>
               </div>
-            </form>
+            )}
           </div>
-        </div>
-      )}
-
-      {/* APP-STYLE SETTINGS MODAL */}
-      {showSettingsModal && (
-        <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
-          <div style={{ background: appSettings.darkMode ? "#181512" : "#f4f4f5", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", overflow: "hidden", border: "1px solid rgba(249,115,22,0.3)", boxShadow: "0 25px 50px rgba(0,0,0,0.3)" }}>
-            
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 22px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <span style={{ fontSize: "18px" }}>⚙️</span>
-                <span style={{ fontSize: "16px", fontWeight: "1000" }}>Settings & Preferences</span>
-              </div>
-              <button onClick={() => setShowSettingsModal(false)} style={{ background: appSettings.darkMode ? "#332d28" : "#f1f1f3", border: "none", width: "30px", height: "30px", borderRadius: "50%", fontSize: "14px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#555", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
-            </div>
-
-            <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "18px", maxHeight: "75vh", overflowY: "auto" }}>
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Appearance</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🌙</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Dark Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.darkMode}
-                      onChange={(e) => setAppSettings(s => ({ ...s, darkMode: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Preferences & Feed</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🔔</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Push Notifications</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.pushNotifications}
-                      onChange={(e) => setAppSettings(s => ({ ...s, pushNotifications: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>▶️</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Autoplay Videos</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.autoplayVideos}
-                      onChange={(e) => setAppSettings(s => ({ ...s, autoplayVideos: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>📶</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Data Saver Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.dataSaver}
-                      onChange={(e) => setAppSettings(s => ({ ...s, dataSaver: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Account & Privacy</span>
-                <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🔒</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Private Account</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.privateAccount}
-                      onChange={(e) => setAppSettings(s => ({ ...s, privateAccount: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "18px" }}>🛡️</span>
-                      <span style={{ fontSize: "13px", fontWeight: "900" }}>Restricted Mode</span>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={appSettings.restrictedMode}
-                      onChange={(e) => setAppSettings(s => ({ ...s, restrictedMode: e.target.checked }))}
-                      style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ padding: "16px 20px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
-              <button onClick={() => setShowSettingsModal(false)} style={{ background: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)", color: "#fff", border: "none", padding: "12px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", width: "100%", cursor: "pointer", boxShadow: "0 4px 12px rgba(249,115,22,0.3)" }}>
-                Save & Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* BOTTOM NAVIGATION BAR */}
-      <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,.98)", backdropFilter: "blur(25px)", borderTop: "1px solid rgba(249,115,22,.25)", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0", zIndex: 99999, pointerEvents: "auto" }}>
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="home"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏠 Home</button>
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="challenge"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🏆 Challenge</button>
-        
-        <button onClick={() => {
-          setNewPostCaption("");
-          setNewPostMedia(null);
-          setShowFreestyleModal(true);
-        }} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #fff", cursor: "pointer", background: "linear-gradient(135deg,#f97316,#c2410c)", color: "#fff", fontSize: "24px", fontWeight: "900", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 15px rgba(249,115,22,0.4)", pointerEvents: "auto" }}>+</button>
-        
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("feed"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="feed"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🔥 Feed</button>
-        
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("notifications"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="notifications"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🔔</button>
-        
-        {isAdmin && (
-          <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("admin"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="admin"?"#dc2626":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>🛠️ Admin</button>
         )}
 
-        <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="profile"?"#c2410c":"#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
-          {currentUser ? (
-            <img src={currentUser.avatar} alt="avatar" style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} />
-          ) : (
-            "👤"
+        {/* EDIT PROFILE MODAL */}
+        {showEditProfileModal && (
+          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
+            <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <span style={{ fontSize: "14px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>✏️ Edit Profile</span>
+                <button onClick={() => setShowEditProfileModal(false)} style={{ background: "none", border: "none", fontSize: "16px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#000" }}>✕</button>
+              </div>
+
+              <form onSubmit={handleSaveEditProfile} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "8px" }}>
+                  <img 
+                    src={editAvatar || "https://i.pravatar.cc/150?img=1"} 
+                    alt="Profile" 
+                    style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} 
+                  />
+                  <div>
+                    <label style={{ fontSize: "11px", fontWeight: "1000", color: "#a8a29e", display: "block", marginBottom: "4px" }}>
+                      Choose from Gallery
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById("avatarUploadModal").click()}
+                      style={{
+                        background: "#f97316",
+                        color: "#fff",
+                        border: "none",
+                        padding: "6px 14px",
+                        borderRadius: "8px",
+                        fontWeight: "700",
+                        fontSize: "12px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      📷 Select Image
+                    </button>
+                    <input
+                      id="avatarUploadModal"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setEditAvatar(reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Display Name"
+                  style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
+                />
+                <input
+                  type="text"
+                  value={editHandle}
+                  onChange={(e) => setEditHandle(e.target.value)}
+                  placeholder="Handle (e.g., @username)"
+                  style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }}
+                />
+                <textarea
+                  value={editBio}
+                  onChange={(e) => setEditBio(e.target.value)}
+                  placeholder="Bio"
+                  rows={3}
+                  style={{ width: "100%", padding: "10px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }}
+                />
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button type="button" onClick={() => setShowEditProfileModal(false)} style={{ flex: 1, background: "transparent", border: "1px solid #fed7aa", padding: "12px", borderRadius: "10px", fontWeight: "700", cursor: "pointer", color: appSettings.darkMode ? "#fff" : "#17120f" }}>
+                    Cancel
+                  </button>
+                  <button type="submit" style={{ flex: 2, background: "#f97316", color: "#fff", border: "none", padding: "12px", borderRadius: "10px", fontWeight: "1000", cursor: "pointer" }}>
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* CHALLENGE ACTION MODAL */}
+        {showChallengeActionModal && (
+          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
+            <div style={{ background: appSettings.darkMode ? "#1e1b18" : "#ffffff", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "500px", width: "100%", padding: "28px", border: "2px solid #fed7aa" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase" }}>🔥 Challenge Entry</span>
+                  <h3 style={{ margin: "5px 0 0", fontSize: "20px", fontWeight: "1000" }}>Submit Your Entry</h3>
+                </div>
+                <button onClick={() => setShowChallengeActionModal(false)} style={{ background: "none", border: "none", fontSize: "16px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#000" }}>✕</button>
+              </div>
+              
+              <div style={{ background: appSettings.darkMode ? "#2a2421" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px", padding: "13px", marginBottom: "14px" }}>
+                <div style={{ fontSize: "12px", fontWeight: "1000", color: "#c2410c" }}>📋 Requirements</div>
+                <div style={{ fontSize: "11px", color: "#a8a29e", fontWeight: "700", marginTop: "4px" }}>
+                  ✅ TikTok video must clearly show identifiable BIGF product/packaging<br />
+                  ✅ Upload a clear photo of the BIGF product/package you used<br />
+                  ✅ TikTok URL must be public and accessible
+                </div>
+              </div>
+              
+              <form onSubmit={handleSocialUrlSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                <input 
+                  type="url" 
+                  placeholder="https://www.tiktok.com/@yourhandle/video/..." 
+                  value={externalSocialUrl} 
+                  onChange={(e) => setExternalSocialUrl(e.target.value)} 
+                  style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#1e1b18" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box" }} 
+                />
+                <textarea 
+                  placeholder="Tell us what you created..." 
+                  value={socialCaption} 
+                  onChange={(e) => setSocialCaption(e.target.value)} 
+                  rows={3} 
+                  style={{ width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #fed7aa", backgroundColor: appSettings.darkMode ? "#141210" : "#fff", color: appSettings.darkMode ? "#fff" : "#000", fontSize: "13px", fontWeight: "700", boxSizing: "border-box", resize: "none" }} 
+                />
+                
+                {/* Product Proof Upload */}
+                <div>
+                  <label style={{ fontSize: "11px", fontWeight: "1000", color: "#a8a29e", display: "block", marginBottom: "4px" }}>
+                    📷 BIGF Product Proof (required)
+                  </label>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById("productProofUpload").click()}
+                      style={{
+                        background: "#f97316",
+                        color: "#fff",
+                        border: "none",
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                        fontWeight: "700",
+                        fontSize: "12px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      📷 Select Image
+                    </button>
+                    <input
+                      id="productProofUpload"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleProductProofUpload}
+                    />
+                    {productProofPreview && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <img src={productProofPreview} alt="Product Proof" style={{ width: "50px", height: "50px", borderRadius: "8px", objectFit: "cover" }} />
+                        <span style={{ fontSize: "11px", color: "#10b981", fontWeight: "700" }}>✅ Uploaded</span>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#a8a29e", marginTop: "4px" }}>
+                    Upload a clear photo of the BIGF product/package you used for this Challenge.
+                  </div>
+                </div>
+                
+                <button type="submit" style={{ background: "#f97316", color: "#fff", border: "none", padding: "13px", borderRadius: "12px", fontWeight: "1000", cursor: "pointer" }}>
+                  Submit Entry →
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* SETTINGS MODAL */}
+        {showSettingsModal && (
+          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", zIndex: 400 }}>
+            <div style={{ background: appSettings.darkMode ? "#181512" : "#f4f4f5", color: appSettings.darkMode ? "#fff" : "#17120f", borderRadius: "28px", maxWidth: "440px", width: "100%", overflow: "hidden", border: "1px solid rgba(249,115,22,0.3)", boxShadow: "0 25px 50px rgba(0,0,0,0.3)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 22px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderBottom: "1px solid rgba(249,115,22,0.15)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span style={{ fontSize: "18px" }}>⚙️</span>
+                  <span style={{ fontSize: "16px", fontWeight: "1000" }}>Settings & Preferences</span>
+                </div>
+                <button onClick={() => setShowSettingsModal(false)} style={{ background: appSettings.darkMode ? "#332d28" : "#f1f1f3", border: "none", width: "30px", height: "30px", borderRadius: "50%", fontSize: "14px", cursor: "pointer", fontWeight: "bold", color: appSettings.darkMode ? "#fff" : "#555", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+              </div>
+
+              <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "18px", maxHeight: "75vh", overflowY: "auto" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Appearance</span>
+                  <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>🌙</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Dark Mode</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.darkMode}
+                        onChange={(e) => setAppSettings(s => ({ ...s, darkMode: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Preferences & Feed</span>
+                  <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>🔔</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Push Notifications</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.pushNotifications}
+                        onChange={(e) => setAppSettings(s => ({ ...s, pushNotifications: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>▶️</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Autoplay Videos</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.autoplayVideos}
+                        onChange={(e) => setAppSettings(s => ({ ...s, autoplayVideos: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>📶</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Data Saver Mode</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.dataSaver}
+                        onChange={(e) => setAppSettings(s => ({ ...s, dataSaver: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: "1000", color: "#c2410c", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px", paddingLeft: "6px" }}>Account & Privacy</span>
+                  <div style={{ background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderRadius: "18px", overflow: "hidden", border: "1px solid rgba(249,115,22,0.15)", display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px", borderBottom: "1px solid rgba(249,115,22,0.1)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>🔒</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Private Account</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.privateAccount}
+                        onChange={(e) => setAppSettings(s => ({ ...s, privateAccount: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 18px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>🛡️</span>
+                        <span style={{ fontSize: "13px", fontWeight: "900" }}>Restricted Mode</span>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={appSettings.restrictedMode}
+                        onChange={(e) => setAppSettings(s => ({ ...s, restrictedMode: e.target.checked }))}
+                        style={{ width: "20px", height: "20px", accentColor: "#f97316", cursor: "pointer" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ padding: "16px 20px", background: appSettings.darkMode ? "#221e1a" : "#ffffff", borderTop: "1px solid rgba(249,115,22,0.15)" }}>
+                <button onClick={() => setShowSettingsModal(false)} style={{ background: "linear-gradient(135deg, #f97316 0%, #c2410c 100%)", color: "#fff", border: "none", padding: "12px", borderRadius: "14px", fontWeight: "1000", fontSize: "13px", width: "100%", cursor: "pointer", boxShadow: "0 4px 12px rgba(249,115,22,0.3)" }}>
+                  Save & Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* BOTTOM NAVIGATION BAR */}
+        <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: appSettings.darkMode ? "#1e1b18" : "rgba(255,255,255,.98)", backdropFilter: "blur(25px)", borderTop: "1px solid rgba(249,115,22,.25)", display: "flex", justifyContent: "space-around", alignItems: "center", padding: "10px 0", zIndex: 99999, pointerEvents: "auto" }}>
+          <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("home"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="home" ? "#c2410c" : "#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+            🏠 Home
+          </button>
+          <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("challenge"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="challenge" ? "#c2410c" : "#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+            🏆 Challenge
+          </button>
+          <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("featured"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="featured" ? "#c2410c" : "#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+            ⭐ Featured
+          </button>
+          {isAdmin && (
+            <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("admin"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="admin" ? "#dc2626" : "#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+              🛠️ Admin
+            </button>
           )}
-          <span style={{ fontSize: "9px", marginTop: "2px" }}>Profile</span>
-        </button>
-      </nav>
+          <button onClick={() => { setSelectedHubChallenge(null); setActiveNavTab("profile"); }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", color: activeNavTab==="profile" ? "#c2410c" : "#a8a29e", fontWeight: "1000", fontSize: "12px", pointerEvents: "auto" }}>
+            {currentUser ? (
+              <img src={currentUser.avatar} alt="avatar" style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover", border: "2px solid #f97316" }} />
+            ) : (
+              "👤"
+            )}
+            <span style={{ fontSize: "9px", marginTop: "2px" }}>My BIGF</span>
+          </button>
+        </nav>
+      </main>
     </div>
   );
 }
