@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { checkBackend } from "./api";
 
 const INITIAL_PRODUCTS = [
@@ -94,11 +94,6 @@ const BACKGROUND_NOODLES = [
 
 const CATEGORIES = ["All", "Main", "Speed", "Creative", "Themed", "Gamified", "Interactive"];
 
-const getRandomName = () => {
-  const names = ["Amina", "Kiprop", "Wanjiru", "James", "Grace", "David", "Sarah", "Kevin", "Faith", "Peter", "Mary", "John", "Esther", "Samuel", "Ruth", "Daniel", "Mercy", "Joseph", "Joy", "Michael"];
-  return names[Math.floor(Math.random() * names.length)];
-};
-
 export default function App() {
   const [activeNavTab, setActiveNavTab] = useState("home");
   const [featuredEntries, setFeaturedEntries] = useState(INITIAL_FEATURED_ENTRIES);
@@ -112,7 +107,7 @@ export default function App() {
   const [quizSpice, setQuizSpice] = useState(null);
   const [quizResult, setQuizResult] = useState(null);
 
-  // Auth state - FIXED
+  // Auth state
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem("currentUser");
     if (saved) {
@@ -123,7 +118,7 @@ export default function App() {
     return null;
   });
 
-  // Auth form states - FIXED with proper initialization
+  // Auth form states
   const [authMode, setAuthMode] = useState("login");
   const [loginUsername, setLoginUsername] = useState("");
   const [signupUsername, setSignupUsername] = useState("");
@@ -362,14 +357,12 @@ export default function App() {
     }
   };
 
-  // FIXED: Login function - properly saves user data
   const handleLogin = () => {
     if (!loginUsername || loginUsername.length < 3) {
       alert("Please enter your username.");
       return;
     }
 
-    // Get all users from localStorage
     const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
     const foundUser = allUsersData[loginUsername];
     
@@ -378,7 +371,6 @@ export default function App() {
       return;
     }
 
-    // Set the current user
     setCurrentUser(foundUser);
     setUserProfile(foundUser);
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
@@ -390,7 +382,6 @@ export default function App() {
     addNotification("Welcome back " + foundUser.name + "! 👋", "info");
   };
 
-  // FIXED: Signup function - properly saves user data
   const handleSignup = () => {
     if (!signupUsername || signupUsername.length < 3) {
       alert("Username must be at least 3 characters long.");
@@ -401,14 +392,12 @@ export default function App() {
       return;
     }
 
-    // Check if username already exists
     const allUsersData = JSON.parse(localStorage.getItem("allUsersData") || "{}");
     if (allUsersData[signupUsername]) {
       alert("Username already taken. Please choose a different username.");
       return;
     }
 
-    // Create new user
     const handle = "@" + signupUsername.toLowerCase().replace(/\s/g, "");
     const newUser = {
       id: "user-" + Date.now(),
@@ -427,16 +416,13 @@ export default function App() {
       orders: []
     };
 
-    // Save to all users data
     allUsersData[signupUsername] = newUser;
     localStorage.setItem("allUsersData", JSON.stringify(allUsersData));
 
-    // Also save to users list for reference
     const existingUsers = JSON.parse(localStorage.getItem("allUsers") || "[]");
     existingUsers.push({ username: signupUsername, userId: newUser.id });
     localStorage.setItem("allUsers", JSON.stringify(existingUsers));
 
-    // Set current user
     setCurrentUser(newUser);
     setUserProfile(newUser);
     localStorage.setItem("currentUser", JSON.stringify(newUser));
@@ -644,7 +630,6 @@ export default function App() {
       email: email
     };
 
-    // If user is logged in, add submission to their profile
     if (currentUser) {
       const updatedUser = {
         ...currentUser,
@@ -667,7 +652,6 @@ export default function App() {
     setProductProofPreview(null);
     setChallengeActionType(null);
     setShowChallengeActionModal(false);
-    // Reset email verification for next submission
     setEmail("");
     setIsEmailVerified(false);
     setVerificationCode("");
@@ -879,9 +863,9 @@ export default function App() {
     );
   };
 
-  // Auth Modal Component
-  const AuthModal = () => {
-    return (
+  // FIXED: Auth Modal Component - Using useMemo to prevent re-renders
+  const AuthModal = useMemo(() => {
+    const ModalContent = () => (
       <div style={{
         position: "fixed",
         inset: 0,
@@ -939,7 +923,7 @@ export default function App() {
             <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
               <input
                 type="text"
-                placeholder="Username"
+                placeholder="Enter your username"
                 value={loginUsername}
                 onChange={(e) => setLoginUsername(e.target.value)}
                 style={{
@@ -949,8 +933,9 @@ export default function App() {
                   border: "1px solid #fed7aa",
                   backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
                   color: appSettings.darkMode ? "#fff" : "#000",
-                  fontSize: "13px",
-                  boxSizing: "border-box"
+                  fontSize: "14px",
+                  boxSizing: "border-box",
+                  outline: "none"
                 }}
               />
               <button
@@ -993,13 +978,14 @@ export default function App() {
                   border: "1px solid #fed7aa",
                   backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
                   color: appSettings.darkMode ? "#fff" : "#000",
-                  fontSize: "13px",
-                  boxSizing: "border-box"
+                  fontSize: "14px",
+                  boxSizing: "border-box",
+                  outline: "none"
                 }}
               />
               <input
                 type="text"
-                placeholder="Display Name"
+                placeholder="Your display name"
                 value={signupDisplayName}
                 onChange={(e) => setSignupDisplayName(e.target.value)}
                 style={{
@@ -1009,8 +995,9 @@ export default function App() {
                   border: "1px solid #fed7aa",
                   backgroundColor: appSettings.darkMode ? "#141210" : "#fff",
                   color: appSettings.darkMode ? "#fff" : "#000",
-                  fontSize: "13px",
-                  boxSizing: "border-box"
+                  fontSize: "14px",
+                  boxSizing: "border-box",
+                  outline: "none"
                 }}
               />
               <button
@@ -1043,7 +1030,9 @@ export default function App() {
         </div>
       </div>
     );
-  };
+    
+    return showAuthModal ? <ModalContent /> : null;
+  }, [showAuthModal, authMode, loginUsername, signupUsername, signupDisplayName, appSettings.darkMode]);
 
   return (
     <div style={{ 
@@ -1058,7 +1047,7 @@ export default function App() {
     }}>
       
       {isNewUser && <WelcomeModal />}
-      {showAuthModal && <AuthModal />}
+      {AuthModal}
 
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
         {slots.map((slot) => (
@@ -1849,21 +1838,38 @@ export default function App() {
                 👤 My BIGF
               </span>
               {currentUser && (
-                <button 
-                  onClick={handleLogout} 
-                  style={{ 
-                    background: "#ef4444", 
-                    color: "#fff", 
-                    border: "none", 
-                    padding: "6px 14px", 
-                    borderRadius: "8px", 
-                    fontWeight: "700", 
-                    fontSize: "11px", 
-                    cursor: "pointer" 
-                  }}
-                >
-                  Logout
-                </button>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button 
+                    onClick={handleLogout} 
+                    style={{ 
+                      background: "#ef4444", 
+                      color: "#fff", 
+                      border: "none", 
+                      padding: "6px 14px", 
+                      borderRadius: "8px", 
+                      fontWeight: "700", 
+                      fontSize: "11px", 
+                      cursor: "pointer" 
+                    }}
+                  >
+                    Logout
+                  </button>
+                  <button 
+                    onClick={() => setShowEditProfileModal(true)} 
+                    style={{ 
+                      background: "#f97316", 
+                      color: "#fff", 
+                      border: "none", 
+                      padding: "8px 16px", 
+                      borderRadius: "10px", 
+                      fontWeight: "1000", 
+                      fontSize: "12px", 
+                      cursor: "pointer" 
+                    }}
+                  >
+                    ✏️ Edit Profile
+                  </button>
+                </div>
               )}
               {!currentUser && (
                 <button 
